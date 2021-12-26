@@ -1,0 +1,87 @@
+plugins {
+    id 'java'
+    id "jacoco"
+}
+
+description = "docs helper service"
+group 'ru.mrs'
+version '0.0.1-SNAPSHOT'
+compileJava   {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+}
+
+ext {
+    fingBugs_version = "3.0.2"
+    jetty9_version = "9.4.44.v20210927"
+    servlet3_version = "3.1.0"
+//    servlet5_version = "5.0.0"
+    mockito_version = "4.2.0"//"3.12.4"
+    lang3_version = "3.12.0"
+    log4j_version = "2.17.0"
+    h2_version = "2.0.204"
+//    h2_version = "1.4.200"
+    junit58_version = "5.8.2"
+    entrypoint = "main.Main"
+    freemarker_version = "2.3.31"
+}
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "com.google.code.findbugs:jsr305:$fingBugs_version"
+//    compileOnly "org.projectlombok:lombok:$lombokVersion"
+//    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit58_version"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit58_version"
+//    testImplementation "org.junit.jupiter:junit-jupiter:$junit58_version"
+    testImplementation "org.apache.commons:commons-lang3:$lang3_version"
+//    testImplementation "org.mockito:mockito-core:$mockito_version"
+    implementation "org.apache.logging.log4j:log4j-core:$log4j_version"
+    implementation "org.apache.logging.log4j:log4j-api:$log4j_version"
+    implementation "org.eclipse.jetty:jetty-server:$jetty9_version"
+    implementation "org.eclipse.jetty:jetty-webapp:$jetty9_version"
+//    implementation "org.eclipse.jetty:jetty-annotations:$jetty9_version"
+//    implementation "org.eclipse.jetty:apache-jsp:$jetty9_version"
+//    implementation 'jstl:jstl:1.2'
+    implementation "org.freemarker:freemarker:$freemarker_version"
+    compileOnly "javax.servlet:javax.servlet-api:$servlet3_version"
+//    implementation "com.h2database:h2:$h2_version"
+//    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
+//    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
+//    implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
+//    implementation "jakarta.servlet:jakarta.servlet-api:$servlet5_version"
+//    implementation "org.eclipse.jetty.websocket:websocket-servlet:$jetty9_version"
+//    implementation "org.eclipse.jetty.websocket:websocket-server:$jetty9_version"
+//    implementation "mysql:mysql-connector-java:$mysqlVersion"
+//    implementation "org.slf4j:slf4j-api:$log_version"
+//    implementation 'commons-logging:commons-logging:1.2'
+//    implementation "org.slf4j:slf4j-log4j12:2.0.0-alpha5"
+//    testImplementation "org.assertj:assertj-core:3.21.0"
+}
+
+/*project.configurations.implementation.setCanBeResolved(true)
+jar {
+    manifest {
+        attributes (
+            'Main-Class': entrypoint,
+            "Class-Path": configurations.implementation.collect { it.name }.join(' '))}}*/
+
+/*clean.doLast {
+    def binDir = new File('tmp')
+    binDir.deleteDir()}*/
+
+task runMain(type : JavaExec ){
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = entrypoint
+}
