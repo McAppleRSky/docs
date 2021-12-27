@@ -3,7 +3,7 @@
   <html lang="en">
 
   <head>
-    <title>Sweater</title>
+    <title>Docs</title>
     <!--    https://getbootstrap.com/docs/4.6/getting-started/introduction/-->
     <!-- Required meta tags -->
     <meta charset="UTF-8">

@@ -12,7 +12,7 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class Main extends MainConfiguration {
 
-    private static final Logger logger = configureLogger(Main.class);
+    private static final Logger LOGGER = configureLogger(Main.class);
     public static final Map<Object, Object> context = new HashMap();
 
     static {
@@ -40,7 +40,7 @@ public class Main extends MainConfiguration {
         Server server = new Server(port);
         server.setHandler(servletContextHandler);
         server.start();
-        logger.info("Server started");
+        LOGGER.info("Server started");
         server.join();
     }
 

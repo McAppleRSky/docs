@@ -3,6 +3,8 @@ package ru.mrs.docs._1_frontend;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.mrs.docs.main.ConfigHide;
 import ru.mrs.docs.main.Main;
 
@@ -16,14 +18,20 @@ import java.util.Map;
 
 public class MainServlet extends HttpServlet {
 
+    private static final Logger LOGGER = LogManager.getLogger(MainServlet.class);
+
     public static final String URL = "/*";
+    private final String moduleName = ((ConfigHide) Main.context.get(ConfigHide.class)).getMODULE_NAME();
+    {
+        LOGGER.info("Module name set ", moduleName);
+    }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Configuration freemarkerConfiguration = (Configuration) Main.context.get(Configuration.class);
         Template template = null;
-        String moduleName = ((ConfigHide) Main.context.get(ConfigHide.class)).getMODULE_NAME();
+//        String moduleName = ((ConfigHide) Main.context.get(ConfigHide.class)).getMODULE_NAME();
         Map<String, String> data = new HashMap<>();
-        data.put("module.name", moduleName);
+        data.put("moduleName", moduleName);
         try ( PrintWriter writer = response.getWriter() ) {
             template = freemarkerConfiguration.getTemplate("greeting.ftl");
             response.setStatus(HttpServletResponse.SC_OK);
