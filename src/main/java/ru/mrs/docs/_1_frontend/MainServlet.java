@@ -18,13 +18,10 @@ import java.util.Map;
 
 public class MainServlet extends HttpServlet {
 
-    private static final Logger LOGGER = LogManager.getLogger(MainServlet.class);
+//    private static final Logger LOGGER = LogManager.getLogger(MainServlet.class);
 
     public static final String URL = "/*";
     private final String moduleName = ((ConfigHide) Main.context.get(ConfigHide.class)).getMODULE_NAME();
-    {
-        LOGGER.info("Module name set ", moduleName);
-    }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Configuration freemarkerConfiguration = (Configuration) Main.context.get(Configuration.class);

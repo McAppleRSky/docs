@@ -3,6 +3,7 @@ package ru.mrs.docs.main;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class Config {
 
     private final Map<String, String> properties = new HashMap();

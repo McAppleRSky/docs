@@ -1,17 +1,28 @@
+
+buildscript {
+    dependencies {
+        classpath "com.github.node-gradle:gradle-node-plugin: 3.1.1"
+    }
+}
+
 plugins {
     id 'java'
+    id "com.github.node-gradle.node" version "3.1.1"
     id "jacoco"
 }
 
 description = "docs helper service"
 group 'ru.mrs'
 version '0.0.1-SNAPSHOT'
+
 compileJava   {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 test {
+    // never UP-TO-DATE
+//  systemProperty "random.testing.seed", new Random().nextInt()
     useJUnitPlatform()
     finalizedBy jacocoTestReport
 }
@@ -24,7 +35,8 @@ ext {
     fingBugs_version = "3.0.2"
     jetty9_version = "9.4.44.v20210927"
     servlet3_version = "3.1.0"
-//    servlet5_version = "5.0.0"
+    freemarker_version = "2.3.31"
+    jackson_version = "2.13.1"
     mockito_version = "4.2.0"//"3.12.4"
     lang3_version = "3.12.0"
     log4j_version = "2.17.0"
@@ -32,8 +44,8 @@ ext {
 //    h2_version = "1.4.200"
     junit58_version = "5.8.2"
     entrypoint = "main.Main"
-    freemarker_version = "2.3.31"
 }
+
 repositories {
     mavenCentral()
 }
@@ -57,8 +69,9 @@ dependencies {
     implementation "org.freemarker:freemarker:$freemarker_version"
     compileOnly "javax.servlet:javax.servlet-api:$servlet3_version"
 //    implementation "com.h2database:h2:$h2_version"
-//    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
-//    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
+//    implementation 'org.json:json:20211205'
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
+    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
 //    implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
 //    implementation "jakarta.servlet:jakarta.servlet-api:$servlet5_version"
 //    implementation "org.eclipse.jetty.websocket:websocket-servlet:$jetty9_version"
@@ -81,7 +94,30 @@ jar {
     def binDir = new File('tmp')
     binDir.deleteDir()}*/
 
-task runMain(type : JavaExec ){
+/*task runMain(type : JavaExec ){
     classpath = sourceSets.main.runtimeClasspath
     mainClass = entrypoint
 }
+
+node {
+    version = '16.13.1'
+    npmVersion = '6.14.4'
+    download = false
+}
+
+task installHaml(type: NpmTask){
+    args = ["install", "haml", "--save"]
+}
+
+*//*task installMustache(type: NpmTask, dependsOn: installHaml){
+    args = ["install", "mustache", "--save"]
+}*//*
+
+task installHtmlDiffer(type: NpmTask, dependsOn: installHaml){
+    args = ["install", "html-differ", "--save"]
+}
+
+//classes.dependsOn.add(installHtmlDiffer)
+
+task mainTask(type: ru.mrs.hamlscript.JavaMainTaskRunner, dependsOn: build){
+}*/
