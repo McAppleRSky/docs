@@ -1,13 +1,6 @@
 
-buildscript {
-    dependencies {
-        classpath "com.github.node-gradle:gradle-node-plugin: 3.1.1"
-    }
-}
-
 plugins {
     id 'java'
-    id "com.github.node-gradle.node" version "3.1.1"
     id "jacoco"
 }
 
@@ -69,9 +62,8 @@ dependencies {
     implementation "org.freemarker:freemarker:$freemarker_version"
     compileOnly "javax.servlet:javax.servlet-api:$servlet3_version"
 //    implementation "com.h2database:h2:$h2_version"
-//    implementation 'org.json:json:20211205'
-    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
-    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
+//    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
+//    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
 //    implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
 //    implementation "jakarta.servlet:jakarta.servlet-api:$servlet5_version"
 //    implementation "org.eclipse.jetty.websocket:websocket-servlet:$jetty9_version"
@@ -82,42 +74,3 @@ dependencies {
 //    implementation "org.slf4j:slf4j-log4j12:2.0.0-alpha5"
 //    testImplementation "org.assertj:assertj-core:3.21.0"
 }
-
-/*project.configurations.implementation.setCanBeResolved(true)
-jar {
-    manifest {
-        attributes (
-            'Main-Class': entrypoint,
-            "Class-Path": configurations.implementation.collect { it.name }.join(' '))}}*/
-
-/*clean.doLast {
-    def binDir = new File('tmp')
-    binDir.deleteDir()}*/
-
-/*task runMain(type : JavaExec ){
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = entrypoint
-}
-
-node {
-    version = '16.13.1'
-    npmVersion = '6.14.4'
-    download = false
-}
-
-task installHaml(type: NpmTask){
-    args = ["install", "haml", "--save"]
-}
-
-*//*task installMustache(type: NpmTask, dependsOn: installHaml){
-    args = ["install", "mustache", "--save"]
-}*//*
-
-task installHtmlDiffer(type: NpmTask, dependsOn: installHaml){
-    args = ["install", "html-differ", "--save"]
-}
-
-//classes.dependsOn.add(installHtmlDiffer)
-
-task mainTask(type: ru.mrs.hamlscript.JavaMainTaskRunner, dependsOn: build){
-}*/
