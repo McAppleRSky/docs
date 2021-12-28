@@ -12,16 +12,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainServlet extends HttpServlet {
+public class GreetingServlet extends HttpServlet {
 
-    private static final Logger LOGGER = LogManager.getLogger(MainServlet.class);
+    private static final Logger LOGGER = LogManager.getLogger(GreetingServlet.class);
 
-    public static final String URL = "/main";
+    public static final String URL = "/*";
     private final String moduleName = ((ConfigHide) Main.context.get(ConfigHide.class)).getMODULE_NAME();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -31,7 +30,7 @@ public class MainServlet extends HttpServlet {
         Map<String, String> data = new HashMap<>();
         data.put("moduleName", moduleName);
         try ( PrintWriter writer = response.getWriter() ) {
-            template = freemarkerConfiguration.getTemplate("main.ftl");
+            template = freemarkerConfiguration.getTemplate("greeting.ftl");
             response.setStatus(HttpServletResponse.SC_OK);
             template.process(data, writer);
         } catch (TemplateException e) {

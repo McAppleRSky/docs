@@ -5,7 +5,11 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import ru.mrs.docs._1_frontend.GreetingServlet;
 import ru.mrs.docs._1_frontend.MainServlet;
+import ru.mrs.docs._2_service.AccountService;
+import ru.mrs.docs._2_service.AccountServiceImpl;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +23,7 @@ public class Main extends MainConfiguration {
         context.put(ConfigHide.class, configureModuleHide());
         context.put(Config.class, configureModule());
         context.put(Configuration.class, configureFreemarker());
+        context.put( AccountService.class, configureAccountService( (ConfigHide)context.get(ConfigHide.class) ) );
     }
 
     public static void main(String[] args) throws Exception {
@@ -30,6 +35,7 @@ public class Main extends MainConfiguration {
 
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.URL);
+        servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.URL);
 
         /*ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
         errorHandler.addErrorPage(404, "/index.html");

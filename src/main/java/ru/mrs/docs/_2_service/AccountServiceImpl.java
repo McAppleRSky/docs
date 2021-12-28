@@ -3,9 +3,19 @@ package ru.mrs.docs._2_service;
 import ru.mrs.docs._2_service.AccountService;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 //import org.apache.commons.lang3.NotImplementedException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AccountServiceImpl implements AccountService {
+
+    protected final Map<String, UserProfile> loginToProfile;
+    protected final Map<String ,UserProfile> sessionIdToProfile;
+
+    public AccountServiceImpl() {
+        loginToProfile = new HashMap<>();
+        sessionIdToProfile = new HashMap<>();
+    }
 
     @Override
     public void createUser(String login, String password) {
