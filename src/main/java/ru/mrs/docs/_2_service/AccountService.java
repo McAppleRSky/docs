@@ -20,14 +20,16 @@ public interface AccountService {
     void deleteUser(String login);
 
     // post session
-    boolean addSession(String sessionId, String login);
+//    boolean addSession(String sessionId, String login);
+    void addSession(String sessionId, UserProfile userProfile);
 
     // delete session
     void deleteSession(String sessionId);
 
     Object getUserByLogin(String login);
 
-    String getUserBySessionId(String sessionId);
+//    String getUserBySessionId(String sessionId);
+    UserProfile getUserBySessionId(String sessionId);
 
     int getUsersCount();
 

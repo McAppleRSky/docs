@@ -16,7 +16,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GreetingServlet extends HttpServlet {
+public class GreetingServlet extends HttpServlet implements Servletable{
 
     private static final Logger LOGGER = LogManager.getLogger(GreetingServlet.class);
 
@@ -31,6 +31,7 @@ public class GreetingServlet extends HttpServlet {
         data.put("moduleName", moduleName);
         try ( PrintWriter writer = response.getWriter() ) {
             template = freemarkerConfiguration.getTemplate("greeting.ftl");
+            response.setContentType(COMMON_CONTENT_TYPE);
             response.setStatus(HttpServletResponse.SC_OK);
             template.process(data, writer);
         } catch (TemplateException e) {

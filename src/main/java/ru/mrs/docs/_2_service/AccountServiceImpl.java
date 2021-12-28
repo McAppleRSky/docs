@@ -1,6 +1,5 @@
 package ru.mrs.docs._2_service;
 
-import ru.mrs.docs._2_service.AccountService;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 //import org.apache.commons.lang3.NotImplementedException;
 import java.util.HashMap;
@@ -48,27 +47,27 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean addSession(String sessionId, String login) {
-        // TODO: need impl
-        throw new NotImplementedException();
+    public void addSession(String sessionId, UserProfile userProfile) {
+//        throw new NotImplementedException();
+        sessionIdToProfile.put(sessionId, userProfile);
     }
 
     @Override
     public void deleteSession(String sessionId) {
-        // TODO: need impl
-        throw new NotImplementedException();
+//        throw new NotImplementedException();
+        sessionIdToProfile.remove(sessionId);
     }
 
     @Override
-    public Object getUserByLogin(String login) {
-        // TODO: need impl
-        throw new NotImplementedException();
+    public UserProfile getUserByLogin(String login) {
+        // throw new NotImplementedException();
+        return loginToProfile.get(login);
     }
 
     @Override
-    public String getUserBySessionId(String sessionId) {
-        // TODO: need impl
-        throw new NotImplementedException();
+    public UserProfile getUserBySessionId(String sessionId) {
+//        throw new NotImplementedException();
+        return sessionIdToProfile.get(sessionId);
     }
 
     @Override

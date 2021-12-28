@@ -7,6 +7,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import ru.mrs.docs._1_frontend.GreetingServlet;
 import ru.mrs.docs._1_frontend.MainServlet;
+import ru.mrs.docs._1_frontend.SignInServlet;
 import ru.mrs.docs._2_service.AccountService;
 import ru.mrs.docs._2_service.AccountServiceImpl;
 
@@ -35,6 +36,7 @@ public class Main extends MainConfiguration {
 
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.URL);
+        servletContextHandler.addServlet( new ServletHolder( new SignInServlet() ), SignInServlet.URL);
         servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.URL);
 
         /*ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
