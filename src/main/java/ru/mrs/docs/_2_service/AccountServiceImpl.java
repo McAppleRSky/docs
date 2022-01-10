@@ -1,6 +1,5 @@
 package ru.mrs.docs._2_service;
 
-import ru.mrs.base.service.account.AccountService;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashMap;

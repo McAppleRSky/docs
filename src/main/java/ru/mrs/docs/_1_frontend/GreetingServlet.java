@@ -6,7 +6,7 @@ import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.mrs.docs.main.ConfigHide;
-import ru.mrs.docs.main.Main;
+import ru.mrs.docs.Main;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

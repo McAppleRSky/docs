@@ -2,7 +2,7 @@ package ru.mrs.docs._1_frontend;
 
 import ru.mrs.docs._2_service.AccountServiceFake;
 import ru.mrs.docs.base.service.account.AccountService;
-import ru.mrs.docs.main.Main;
+import ru.mrs.docs.Main;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
