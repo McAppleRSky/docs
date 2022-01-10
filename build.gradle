@@ -26,6 +26,7 @@ jacocoTestReport {
 
 ext {
     fingBugs_version = "3.0.2"
+    lombok_version = '1.18.22'
     jetty9_version = "9.4.44.v20210927"
     servlet3_version = "3.1.0"
     freemarker_version = "2.3.31"
@@ -45,8 +46,8 @@ repositories {
 
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:$fingBugs_version"
-//    compileOnly "org.projectlombok:lombok:$lombokVersion"
-//    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    compileOnly "org.projectlombok:lombok:$lombok_version"
+    annotationProcessor "org.projectlombok:lombok:$lombok_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit58_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit58_version"
 //    testImplementation "org.junit.jupiter:junit-jupiter:$junit58_version"

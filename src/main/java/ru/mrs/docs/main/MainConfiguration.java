@@ -10,10 +10,9 @@ import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
 import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
 import org.apache.logging.log4j.core.config.builder.api.RootLoggerComponentBuilder;
 import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
-import ru.mrs.docs._2_service.AccountService;
-import ru.mrs.docs._2_service.AccountServiceImpl;
+import ru.mrs.docs._2_service.AccountServiceFake;
+import ru.mrs.docs._2_service.AccountServiceImpl_;
 import ru.mrs.docs._2_service.AccountServiceImpl0;
-import ru.mrs.docs._2_service.UserProfile;
 
 import java.io.*;
 import java.util.Properties;
@@ -104,10 +103,10 @@ class MainConfiguration {
         return configuration;
     }
 
-    protected static AccountService configureAccountService(ConfigHide configHide) {
+    protected static AccountServiceFake configureAccountService(ConfigHide configHide) {
         String defaultUserName = configHide.getUSER_NAME(), defaultPassword = configHide.getUSER_PASSWORD(), defaultEmail = "";
         if (defaultUserName.isEmpty() && defaultPassword.isEmpty()) {
-            return new AccountServiceImpl();
+            return new AccountServiceImpl_();
         } else {
             return new AccountServiceImpl0(defaultUserName, new UserProfile(defaultUserName, defaultPassword, defaultEmail) );
         }
