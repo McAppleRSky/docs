@@ -5,11 +5,11 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@Getter
-@RequiredArgsConstructor
-//@NoArgsConstructor
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserProfile implements Serializable {
-    private final String login;
-    private final String pass;
-    private final String email;
+    private String login;
+    private String pass;
+    private String email;
 }

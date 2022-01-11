@@ -111,7 +111,7 @@ class MainConfiguration {
     protected static ConfigComponent configureContext() {
         ConfigComponent result = null;
         Properties properties = new Properties();
-        try (InputStream input = MainConfiguration.class.getClassLoader().getResourceAsStream("doc.properties")) {
+        try (InputStream input = MainConfiguration.class.getClassLoader().getResourceAsStream("docs.properties")) {
             properties.load(input);
             result = new ConfigComponentImpl("server-port", properties.getProperty("server-port"));
             result.setProperty("redis-host", properties.getProperty("redis-host"));

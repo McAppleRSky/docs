@@ -15,5 +15,7 @@ public interface VFS {
     boolean ifExistRoot();
     boolean isDirectoryRoot();
     boolean mkdirRoot();
-    public Iterator<String> getIteratorRoot();
+    Iterator<String> getIteratorRoot();
+    boolean remove(String file);
+
 }

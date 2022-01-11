@@ -1,7 +1,6 @@
 package ru.mrs.docs.service;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.junit.jupiter.api.Test;
 import ru.mrs.base.service.file.*;
 
 import java.io.File;
@@ -9,7 +8,6 @@ import java.util.Iterator;
 
 public class UserProfileTest {
 
-    @Test
     void createTest() {
         String login = "admin", pass = "admin", email = "mcapple@yandex.ru";
         UserProfile userProfile = new UserProfile(login, pass, email);
@@ -32,11 +30,18 @@ public class UserProfileTest {
         }
 
         Iterator<String> iteratorRoot = vfs.getIteratorRoot();
-        while (iteratorRoot.hasNext()) {
-            String next = iteratorRoot.next();
-            System.out.println();
+//        while (iteratorRoot.hasNext()) { String current = iteratorRoot.next(); }
+        if (iteratorRoot.hasNext()) {
+            String current = iteratorRoot.next();
+            if (vfs.isDirectory(current)) {
+                ObjectWriter.write(userProfile, current + "/profile.ser");
+                System.out.print("");
+            } else {
+                throw new IllegalArgumentException("Root is file");
+            }
+        } else {
+            throw new IllegalArgumentException("Root is absent");
         }
-
 
         ObjectWriter.write(userProfile, "path");
 
@@ -95,6 +100,11 @@ class VfsTestImpl extends VfsAbstract implements VFS {
     public boolean mkdir(String file) {
 //        throw new NotImplementedException("");
         return new File(file).mkdir();
+    }
+
+    @Override
+    public boolean remove(String file) {
+        return new File(file).delete();
     }
 
     @Override
