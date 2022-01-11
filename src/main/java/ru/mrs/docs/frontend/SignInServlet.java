@@ -1,8 +1,8 @@
-package ru.mrs.docs._1_frontend;
+package ru.mrs.docs.frontend;
 
-import ru.mrs.docs._2_service.AccountServiceFake;
-import ru.mrs.docs.base.service.account.AccountService;
 import ru.mrs.docs.Main;
+import ru.mrs.base.service.account.AccountService;
+import ru.mrs.docs.service.UserProfile;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +13,7 @@ import java.io.IOException;
 public class SignInServlet extends HttpServlet implements Servletable{
 
     public static final String URL = "/signin";
-    private final AccountService accountService = (AccountService)Main.context.get(AccountServiceFake.class);
+    private final AccountService accountService = (AccountService)Main.context.get(AccountService.class);
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {

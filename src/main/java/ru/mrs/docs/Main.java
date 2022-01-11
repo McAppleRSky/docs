@@ -14,11 +14,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import ru.mrs.docs._2_service.AccountService;
-import ru.mrs.docs._1_frontend.MainServlet;
-import ru.mrs.docs._1_frontend.SignInServlet;
-import ru.mrs.docs._2_service.AccountServiceFake;
-import ru.mrs.docs._2_service.AccountServiceImpl;
+import ru.mrs.base.service.account.AccountService;
+import ru.mrs.docs.frontend.MainServlet;
+import ru.mrs.docs.frontend.SignInServlet;
+import ru.mrs.docs.service.AccountServiceImpl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,11 +34,11 @@ public class Main extends MainConfiguration {
     public static final Map<Object, Object> context = new HashMap();
 
     static {
-        context.put(ConfigHide.class, configureModuleHide());
-        context.put(Config.class, configureModule());
+//        context.put(ConfigHide.class, configureModuleHide());
+//        context.put(Config.class, configureModule());
         context.put(Configuration.class, configureFreemarker());
 //        context.put( AccountService.class, configureAccountService( (ConfigHide)context.get(ConfigHide.class) ) );
-        context.put( AccountService.class, configureAccountService( (AccountService)context.get(AccountServiceImpl.class) ) );
+//        context.put( AccountService.class, configureAccountService( (AccountService)context.get(AccountServiceImpl.class) ) );
     }
 
     public static void main(String[] args) throws Exception {
@@ -50,7 +49,7 @@ public class Main extends MainConfiguration {
         mBeanServer.registerMBean(serverStatistics, name);*/
 
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        servletContextHandler.addServlet(new ServletHolder( new WebSocketChatServlet() ), WebSocketChatServlet.PATH);
+//        servletContextHandler.addServlet(new ServletHolder( new WebSocketChatServlet() ), WebSocketChatServlet.PATH);
 
         servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.URL);
         servletContextHandler.addServlet( new ServletHolder( new SignInServlet() ), SignInServlet.URL);
@@ -63,13 +62,13 @@ public class Main extends MainConfiguration {
         errorHandler.addErrorPage(404, "/index.html");
         servletContextHandler.setErrorHandler(errorHandler);*/
 
-        Config config = (Config) (Main.context.get(Config.class));
-        int port = Integer.parseInt(config.getProperty("port"));
-        Server server = new Server(port);
-        server.setHandler(servletContextHandler);
-        server.start();
+//        Config config = (Config) (Main.context.get(Config.class));
+//        int port = Integer.parseInt(config.getProperty("port"));
+//        Server server = new Server(port);
+//        server.setHandler(servletContextHandler);
+//        server.start();
         LOGGER.info("Server started");
-        server.join();
+//        server.join();
     }
 
 }

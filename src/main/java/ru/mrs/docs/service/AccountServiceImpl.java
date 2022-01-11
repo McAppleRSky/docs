@@ -1,19 +1,10 @@
-package ru.mrs.docs._2_service;
+package ru.mrs.docs.service;
 
+import ru.mrs.base.service.account.AccountService;
+import ru.mrs.base.service.account.AccountServiceAbstract;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class AccountServiceImpl implements AccountService<UserProfile> {
-
-    private final Map<String, UserProfile> loginToProfile;
-    private final Map<String, UserProfile> sessionIdToProfile;
-
-    public AccountServiceImpl() {
-        loginToProfile = new HashMap<>();
-        sessionIdToProfile = new HashMap<>();
-    }
+public class AccountServiceImpl extends AccountServiceAbstract<UserProfile> implements AccountService<UserProfile> {
 
     @Override
     public void addNewUser(UserProfile userProfile) {

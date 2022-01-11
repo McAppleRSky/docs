@@ -1,4 +1,4 @@
-package ru.mrs.docs._2_service;
+package ru.mrs.base.service.account;
 
 public interface AccountService<T> {
 

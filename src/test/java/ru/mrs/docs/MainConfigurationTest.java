@@ -1,4 +1,4 @@
-package ru.mrs.docs.main;
+package ru.mrs.docs;
 
 import org.junit.jupiter.api.Test;
 

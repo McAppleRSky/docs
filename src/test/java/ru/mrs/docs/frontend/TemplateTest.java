@@ -1,4 +1,4 @@
-package ru.mrs.docs._1_frontend;
+package ru.mrs.docs.frontend;
 
 import java.io.*;
 import java.net.URL;
