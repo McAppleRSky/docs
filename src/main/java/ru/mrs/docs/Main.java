@@ -1,6 +1,7 @@
 package ru.mrs.docs;
 
 import freemarker.template.Configuration;
+import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -10,19 +11,17 @@ import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
 import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
 import org.apache.logging.log4j.core.config.builder.api.RootLoggerComponentBuilder;
 import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
-import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import ru.mrs.base.service.account.AccountService;
 import ru.mrs.docs.frontend.MainServlet;
 import ru.mrs.docs.frontend.SignInServlet;
-import ru.mrs.docs.service.AccountServiceImpl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -34,9 +33,10 @@ public class Main extends MainConfiguration {
     public static final Map<Object, Object> context = new HashMap();
 
     static {
-//        context.put(ConfigHide.class, configureModuleHide());
-//        context.put(Config.class, configureModule());
-        context.put(Configuration.class, configureFreemarker());
+        for (Map.Entry<PropertyKeys, String> PropertyKeyString : configureContext().entrySet()) {
+            context.put(PropertyKeyString.getKey(), PropertyKeyString.getValue());
+        }
+        context.put(freemarker.template.Configuration.class, configureFreemarker());
 //        context.put( AccountService.class, configureAccountService( (ConfigHide)context.get(ConfigHide.class) ) );
 //        context.put( AccountService.class, configureAccountService( (AccountService)context.get(AccountServiceImpl.class) ) );
     }
@@ -108,35 +108,27 @@ class MainConfiguration {
         return loggerContext.getLogger(c.getName());
     }
 
-    protected static ConfigComponent configureContext() {
-        ConfigComponent result = null;
+    protected static Map<PropertyKeys, String> configureContext() {
+        Map<PropertyKeys, String> propertyKeysStringMap = new HashMap<>();
         Properties properties = new Properties();
-        try (InputStream input = MainConfiguration.class.getClassLoader().getResourceAsStream("docs.properties")) {
-            properties.load(input);
-            result = new ConfigComponentImpl("server-port", properties.getProperty("server-port"));
-            result.setProperty("redis-host", properties.getProperty("redis-host"));
-            result.setProperty("redis-port", properties.getProperty("redis-port"));
-            result.setProperty("redis-timeout", properties.getProperty("redis-timeout"));
-            result.setProperty("chat-room", properties.getProperty("chat-room"));
-            result.setProperty("date-time-format", properties.getProperty("date-time-format"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        for (String propertyFile : new String[]{"docs-hide.properties", "docs.properties"}) {
+            try (InputStream input = MainConfiguration.class.getClassLoader().getResourceAsStream(propertyFile)) {
+                properties.load(input);
+            }catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
-        try (InputStream input = MainConfiguration.class.getClassLoader().getResourceAsStream("docs-hide.properties")) {
-            properties.load(input);
-            result.setProperty("user-name", properties.getProperty("user-name"));
-            result.setProperty("user-password", properties.getProperty("user-password"));
-            result.setProperty("db-usr-name", properties.getProperty("db-usr-name"));
-            result.setProperty("db-usr-password", properties.getProperty("db-usr-password"));
-            result.setProperty("-", properties.getProperty("-"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        EnumSet<PropertyKeys> propertySet = EnumSet.allOf(PropertyKeys.class);
+        for (PropertyKeys propertyKey : PropertyKeys.values()) {
+            String propertyValue=properties.getProperty(propertyKey.toString());
+            if (propertyValue!=null) {
+                propertyKeysStringMap.put(propertyKey, propertyValue);
+                propertySet.remove(propertyKey);
+            }
         }
-        return result;
+        return propertyKeysStringMap;
     }
 
     protected static Configuration configureFreemarker (){
@@ -156,33 +148,5 @@ class MainConfiguration {
         }
         return configuration;
     }
-
-}
-
-class ConfigComponentImpl implements ConfigComponent {
-
-    private final Map<String, String> properties = new HashMap<>();
-
-    public ConfigComponentImpl(String property, String value) {
-        setProperty(property, value);
-    }
-
-    @Override
-    public String getProperty(String property) {
-        return properties.get(property);
-    }
-
-    @Override
-    public void setProperty(String property, String value) {
-        properties.put(property, value);
-    }
-
-}
-
-interface ConfigComponent {
-
-    String getProperty(String property);
-
-    void setProperty(String property, String value);
 
 }
