@@ -8,5 +8,6 @@ public enum PropertyKeys {
     db_usr_name,
     db_usr_password,
     server_port,
-    base_html
+    resource_base,
+    context_path
 }

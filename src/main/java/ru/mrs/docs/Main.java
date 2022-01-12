@@ -14,6 +14,7 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import ru.mrs.base.service.account.AccountService;
@@ -26,7 +27,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,16 +63,17 @@ public class Main extends MainConfiguration {
 //        servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.URL);
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase( context.get(PropertyKeys.base_html).toString() );
+        resource_handler.setResourceBase( context.get(PropertyKeys.resource_base).toString() );
 
-//        ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
-//        errorHandler.addErrorPage(404, "/missing.html");
+        ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
+        errorHandler.addErrorPage(404, "missing.html");
 //        servletContextHandler.setErrorHandler(errorHandler);
+        servletContextHandler.setContextPath(context.get(PropertyKeys.context_path).toString());
 
         Handler[] handlers = {
                 resource_handler
                 ,servletContextHandler
-                //,errorHandler
+                ,errorHandler
         };
 
         HandlerList handlerList = new HandlerList();
@@ -101,7 +102,11 @@ class MainConfiguration {
     private static final String[]
             PROPERTY_FILES = {"docs-hide.properties", "docs.properties"};
     private static final EnumSet<PropertyKeys>
-            RESOURCES_PROPERTIES = EnumSet.of(PropertyKeys.base_html, PropertyKeys.default_prof );
+            RESOURCES_PROPERTIES = EnumSet.of(
+                    PropertyKeys.resource_base
+                    ,PropertyKeys.default_prof
+                    ,PropertyKeys.context_path
+    );
 
     protected static Logger configureLogger(Class c){
         ConfigurationBuilder<BuiltConfiguration> cfgBuilder = ConfigurationBuilderFactory.newConfigurationBuilder();
