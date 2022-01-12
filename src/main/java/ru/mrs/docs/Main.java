@@ -14,7 +14,6 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import ru.mrs.base.service.account.AccountService;
@@ -27,6 +26,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class Main extends MainConfiguration {
     public static final Map<Object, Object> context = new HashMap();
 
     static {
-        context.putAll(configureContext());
+        context.putAll(loadProperties());
         context.put(
                 AccountService.class, configureAccountService(
                         context.get(PropertyKeys.default_user),
@@ -96,6 +96,8 @@ public class Main extends MainConfiguration {
 //@SuppressWarnings( "deprecation" )
 class MainConfiguration {
 
+    private static final boolean OS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
+
     private static final String[]
             PROPERTY_FILES = {"docs-hide.properties", "docs.properties"};
     private static final EnumSet<PropertyKeys>
@@ -133,7 +135,7 @@ class MainConfiguration {
         return loggerContext.getLogger(c.getName());
     }
 
-    protected static Map configureContext() {
+    protected static Map loadProperties() {
         Map<PropertyKeys, String> mapEnumString = new HashMap<>();
         Properties properties = new Properties();
         for (String propertyFile : PROPERTY_FILES) {
@@ -151,6 +153,9 @@ class MainConfiguration {
                 if (RESOURCES_PROPERTIES.contains(propertyKey)) {
                     propertyString = MainConfiguration.class.getClassLoader()
                             .getResource(propertyString).getPath();
+                    if (OS_WINDOWS) {
+                        propertyString = propertyString.substring(1);
+                    }
                 }
                 mapEnumString.put(propertyKey,propertyString);
             }
