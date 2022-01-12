@@ -14,6 +14,7 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import ru.mrs.base.service.account.AccountService;
@@ -63,8 +64,19 @@ public class Main extends MainConfiguration {
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
         resource_handler.setResourceBase( context.get(PropertyKeys.base_html).toString() );
-        HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resource_handler, servletContextHandler});
+
+//        ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
+//        errorHandler.addErrorPage(404, "/missing.html");
+//        servletContextHandler.setErrorHandler(errorHandler);
+
+        Handler[] handlers = {
+                resource_handler
+                ,servletContextHandler
+                //,errorHandler
+        };
+
+        HandlerList handlerList = new HandlerList();
+        handlerList.setHandlers(handlers);
 
         /*ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
         errorHandler.addErrorPage(404, "/index.html");
@@ -73,7 +85,7 @@ public class Main extends MainConfiguration {
 //        int port = ;
         Server server = new Server( Integer.parseInt( Main.context.get( PropertyKeys.server_port ).toString() ) );
 //        server.setHandler(servletContextHandler);
-        server.setHandler(handlers);
+        server.setHandler(handlerList);
         server.start();
         LOGGER.info("Server started");
         server.join();
