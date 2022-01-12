@@ -10,9 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class SignInServlet extends HttpServlet implements Servletable{
+public class LoginServlet extends HttpServlet implements Servletable
+{
 
-    public static final String URL = "/signin";
+    public static final String URL = "/login";
+
     private final AccountService accountService = (AccountService)Main.context.get(AccountService.class);
 
     public void doPost(HttpServletRequest request,

@@ -2,7 +2,7 @@ package ru.mrs.docs.service;
 
 import ru.mrs.base.service.account.AccountService;
 import ru.mrs.base.service.account.AccountServiceAbstract;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 
 public class AccountServiceImpl extends AccountServiceAbstract<UserProfile> implements AccountService<UserProfile> {
 

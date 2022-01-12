@@ -1,7 +1,6 @@
 package ru.mrs.docs;
 
 import freemarker.template.Configuration;
-import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -11,13 +10,15 @@ import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
 import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
 import org.apache.logging.log4j.core.config.builder.api.RootLoggerComponentBuilder;
 import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import ru.mrs.base.service.account.AccountService;
 import ru.mrs.base.service.file.ObjectWriter;
-import ru.mrs.docs.frontend.MainServlet;
-import ru.mrs.docs.frontend.SignInServlet;
+import ru.mrs.docs.frontend.LoginServlet;
 import ru.mrs.docs.service.AccountServiceImpl;
 import ru.mrs.docs.service.UserProfile;
 
@@ -37,14 +38,12 @@ public class Main extends MainConfiguration {
     public static final Map<Object, Object> context = new HashMap();
 
     static {
-        for (Map.Entry<PropertyKeys, String> PropertyKeyString : configureContext().entrySet()) {
-            context.put(PropertyKeyString.getKey(), PropertyKeyString.getValue());
-        }
-        context.put(freemarker.template.Configuration.class, configureFreemarker());
+        context.putAll(configureContext());
         context.put(
                 AccountService.class, configureAccountService(
                         context.get(PropertyKeys.default_user),
                         context.get(PropertyKeys.default_prof) ) );
+        context.put(freemarker.template.Configuration.class, configureFreemarker());
 //        context.put( AccountService.class, configureAccountService( (AccountService)context.get(AccountServiceImpl.class) ) );
     }
 
@@ -58,30 +57,37 @@ public class Main extends MainConfiguration {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
 //        servletContextHandler.addServlet(new ServletHolder( new WebSocketChatServlet() ), WebSocketChatServlet.PATH);
 
-        servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.URL);
-        servletContextHandler.addServlet( new ServletHolder( new SignInServlet() ), SignInServlet.URL);
+//        servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.URL);
+        servletContextHandler.addServlet( new ServletHolder( new LoginServlet() ), LoginServlet.URL);
 //        servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.URL);
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase((String)context.get("public_html"));
+        resource_handler.setResourceBase( context.get(PropertyKeys.base_html).toString() );
+        HandlerList handlers = new HandlerList();
+        handlers.setHandlers(new Handler[]{resource_handler, servletContextHandler});
 
         /*ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
         errorHandler.addErrorPage(404, "/index.html");
         servletContextHandler.setErrorHandler(errorHandler);*/
 
-//        Config config = (Config) (Main.context.get(Config.class));
-//        int port = Integer.parseInt(config.getProperty("port"));
-//        Server server = new Server(port);
+//        int port = ;
+        Server server = new Server( Integer.parseInt( Main.context.get( PropertyKeys.server_port ).toString() ) );
 //        server.setHandler(servletContextHandler);
-//        server.start();
+        server.setHandler(handlers);
+        server.start();
         LOGGER.info("Server started");
-//        server.join();
+        server.join();
     }
 
 }
 
 //@SuppressWarnings( "deprecation" )
 class MainConfiguration {
+
+    private static final String[]
+            PROPERTY_FILES = {"docs-hide.properties", "docs.properties"};
+    private static final EnumSet<PropertyKeys>
+            RESOURCES_PROPERTIES = EnumSet.of(PropertyKeys.base_html, PropertyKeys.default_prof );
 
     protected static Logger configureLogger(Class c){
         ConfigurationBuilder<BuiltConfiguration> cfgBuilder = ConfigurationBuilderFactory.newConfigurationBuilder();
@@ -115,10 +121,10 @@ class MainConfiguration {
         return loggerContext.getLogger(c.getName());
     }
 
-    protected static Map<PropertyKeys, String> configureContext() {
-        Map<PropertyKeys, String> propertyKeysStringMap = new HashMap<>();
+    protected static Map configureContext() {
+        Map<PropertyKeys, String> mapEnumString = new HashMap<>();
         Properties properties = new Properties();
-        for (String propertyFile : new String[]{"docs-hide.properties", "docs.properties"}) {
+        for (String propertyFile : PROPERTY_FILES) {
             try (InputStream input = MainConfiguration.class.getClassLoader().getResourceAsStream(propertyFile)) {
                 properties.load(input);
             }catch (FileNotFoundException e) {
@@ -127,15 +133,17 @@ class MainConfiguration {
                 ex.printStackTrace();
             }
         }
-        EnumSet<PropertyKeys> propertySet = EnumSet.allOf(PropertyKeys.class);
         for (PropertyKeys propertyKey : PropertyKeys.values()) {
-            String propertyValue=properties.getProperty(propertyKey.toString());
-            if (propertyValue!=null) {
-                propertyKeysStringMap.put(propertyKey, propertyValue);
-                propertySet.remove(propertyKey);
+            String propertyString = properties.getProperty(propertyKey.toString());
+            if (propertyString != null) {
+                if (RESOURCES_PROPERTIES.contains(propertyKey)) {
+                    propertyString = MainConfiguration.class.getClassLoader()
+                            .getResource(propertyString).getPath();
+                }
+                mapEnumString.put(propertyKey,propertyString);
             }
         }
-        return propertyKeysStringMap;
+        return mapEnumString;
     }
 
     protected static Configuration configureFreemarker (){
@@ -156,15 +164,8 @@ class MainConfiguration {
         return configuration;
     }
 
-    protected static AccountService<UserProfile> configureAccountService(
-            Object defaultLogin,
-            Object defaultProfile)
-    {
-        UserProfile userProfile = (UserProfile) ObjectWriter.read(
-                MainConfiguration.class
-                        .getClassLoader()
-                        .getResource(defaultProfile.toString())
-                        .getPath() );
+    protected static AccountService<UserProfile> configureAccountService(Object defaultLogin, Object defaultProfile) {
+        UserProfile userProfile = (UserProfile)ObjectWriter.read(defaultProfile.toString());
         return new AccountServiceImpl(defaultLogin.toString(), userProfile);
     }
 

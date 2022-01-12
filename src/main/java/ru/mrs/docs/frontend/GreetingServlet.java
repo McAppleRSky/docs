@@ -19,7 +19,7 @@ public class GreetingServlet extends HttpServlet implements Servletable{
 
     private static final Logger LOGGER = LogManager.getLogger(GreetingServlet.class);
 
-    public static final String URL = "/*";
+    public static final String URL = "/greeting";
 //    private final String moduleName = ((ConfigHide) Main.context.get(ConfigHide.class)).getMODULE_NAME();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
