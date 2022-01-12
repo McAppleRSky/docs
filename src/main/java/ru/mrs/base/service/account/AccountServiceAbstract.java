@@ -7,8 +7,8 @@ import java.util.Map;
 
 public abstract class AccountServiceAbstract<T> {
 
-    private final Map<String, T> loginToProfile;
-    private final Map<String, T> sessionIdToProfile;
+    protected final Map<String, T> loginToProfile;
+    protected final Map<String, T> sessionIdToProfile;
 
     public AccountServiceAbstract() {
         loginToProfile = new HashMap<>();

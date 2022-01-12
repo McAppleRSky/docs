@@ -6,6 +6,14 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class AccountServiceImpl extends AccountServiceAbstract<UserProfile> implements AccountService<UserProfile> {
 
+    public AccountServiceImpl() {
+        super();
+    }
+    public AccountServiceImpl(String login, UserProfile userProfile) {
+        this();
+        loginToProfile.put(login, userProfile);
+    }
+
     @Override
     public void addNewUser(UserProfile userProfile) {
         throw new NotImplementedException();

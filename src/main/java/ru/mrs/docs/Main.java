@@ -14,8 +14,12 @@ import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import ru.mrs.base.service.account.AccountService;
+import ru.mrs.base.service.file.ObjectWriter;
 import ru.mrs.docs.frontend.MainServlet;
 import ru.mrs.docs.frontend.SignInServlet;
+import ru.mrs.docs.service.AccountServiceImpl;
+import ru.mrs.docs.service.UserProfile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,7 +41,10 @@ public class Main extends MainConfiguration {
             context.put(PropertyKeyString.getKey(), PropertyKeyString.getValue());
         }
         context.put(freemarker.template.Configuration.class, configureFreemarker());
-//        context.put( AccountService.class, configureAccountService( (ConfigHide)context.get(ConfigHide.class) ) );
+        context.put(
+                AccountService.class, configureAccountService(
+                        context.get(PropertyKeys.default_user),
+                        context.get(PropertyKeys.default_prof) ) );
 //        context.put( AccountService.class, configureAccountService( (AccountService)context.get(AccountServiceImpl.class) ) );
     }
 
@@ -147,6 +154,18 @@ class MainConfiguration {
             e.printStackTrace();
         }
         return configuration;
+    }
+
+    protected static AccountService<UserProfile> configureAccountService(
+            Object defaultLogin,
+            Object defaultProfile)
+    {
+        UserProfile userProfile = (UserProfile) ObjectWriter.read(
+                MainConfiguration.class
+                        .getClassLoader()
+                        .getResource(defaultProfile.toString())
+                        .getPath() );
+        return new AccountServiceImpl(defaultLogin.toString(), userProfile);
     }
 
 }
