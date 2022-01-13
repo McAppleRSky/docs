@@ -26,12 +26,14 @@ public class AccountServiceImpl extends AccountServiceAbstract<UserProfile> impl
 
     @Override
     public UserProfile getUserByLogin(String login) {
-        throw new NotImplementedException();
+//        throw new NotImplementedException();
+        return loginToProfile.get(login);
     }
 
     @Override
     public void addSession(String sessionId, UserProfile userProfile) {
-        throw new NotImplementedException();
+        sessionIdToProfile.put(sessionId, userProfile);
+//        throw new NotImplementedException();
     }
 
     @Override
@@ -41,7 +43,8 @@ public class AccountServiceImpl extends AccountServiceAbstract<UserProfile> impl
 
     @Override
     public UserProfile getUserBySessionId(String sessionId) {
-        throw new NotImplementedException();
+//        throw new NotImplementedException();
+        return sessionIdToProfile.get(sessionId);
     }
 
 }

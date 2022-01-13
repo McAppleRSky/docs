@@ -5,7 +5,10 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.mrs.base.service.account.AccountService;
 import ru.mrs.docs.Main;
+import ru.mrs.docs.PropertyKeys;
+import ru.mrs.docs.service.UserProfile;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,22 +22,36 @@ public class GreetingServlet extends HttpServlet implements Servletable{
 
     private static final Logger LOGGER = LogManager.getLogger(GreetingServlet.class);
 
-    public static final String URL = "/greeting";
-//    private final String moduleName = ((ConfigHide) Main.context.get(ConfigHide.class)).getMODULE_NAME();
+    public static final String PATH_SPEC = "/greeting";
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Configuration freemarkerConfiguration = (Configuration) Main.context.get(Configuration.class);
-        Template template = null;
-//        String moduleName = ((ConfigHide) Main.context.get(ConfigHide.class)).getMODULE_NAME();
-        Map<String, String> data = new HashMap<>();
-//        data.put("moduleName", moduleName);
-        try ( PrintWriter writer = response.getWriter() ) {
-            template = freemarkerConfiguration.getTemplate("greeting.ftl");
-            response.setContentType(COMMON_CONTENT_TYPE);
-            response.setStatus(HttpServletResponse.SC_OK);
-            template.process(data, writer);
-        } catch (TemplateException e) {
-            e.printStackTrace();
+    private final String moduleName = Main.context.get(PropertyKeys.module_name).toString();
+
+    private final AccountService accountService = (AccountService)Main.context.get(AccountService.class);
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType(COMMON_CONTENT_TYPE);
+
+        UserProfile userProfile = (UserProfile) accountService.getUserBySessionId(request.getSession().getId());
+        if (userProfile!=null) {
+            LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC);
+            Configuration freemarkerConfiguration = (Configuration) Main.context.get(Configuration.class);
+            Template template = null;
+            Map<String, String> data = new HashMap<>();
+            data.put("login", userProfile.getLogin());
+            data.put(PropertyKeys.module_name.toString(), moduleName);
+            try ( PrintWriter writer = response.getWriter() ) {
+                template = freemarkerConfiguration.getTemplate("greeting.ftl");
+                response.setContentType(COMMON_CONTENT_TYPE);
+                response.setStatus(HttpServletResponse.SC_OK);
+                template.process(data, writer);
+            } catch (TemplateException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendRedirect(REDIR_ROOT);
+            LOGGER.warn(UNAUTHORISED_NOW + PATH_SPEC);
         }
     }
 

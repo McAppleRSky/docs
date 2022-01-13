@@ -14,11 +14,11 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import ru.mrs.base.service.account.AccountService;
 import ru.mrs.base.service.file.ObjectWriter;
+import ru.mrs.docs.frontend.GreetingServlet;
 import ru.mrs.docs.frontend.LoginServlet;
 import ru.mrs.docs.service.AccountServiceImpl;
 import ru.mrs.docs.service.UserProfile;
@@ -59,8 +59,8 @@ public class Main extends MainConfiguration {
 //        servletContextHandler.addServlet(new ServletHolder( new WebSocketChatServlet() ), WebSocketChatServlet.PATH);
 
 //        servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.URL);
-        servletContextHandler.addServlet( new ServletHolder( new LoginServlet() ), LoginServlet.URL);
-//        servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.URL);
+        servletContextHandler.addServlet( new ServletHolder( new LoginServlet() ), LoginServlet.PATH_SPEC);
+        servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.PATH_SPEC);
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
         resource_handler.setResourceBase( context.get(PropertyKeys.resource_base).toString() );

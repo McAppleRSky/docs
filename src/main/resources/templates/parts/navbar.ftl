@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/">docs</a>
+  <a class="navbar-brand" href="/greeting">docs</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -8,11 +8,15 @@
     <!--    <a class="navbar-brand" href="#">Hidden brand</a>-->
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/greeting">Home</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/main">Old common table</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/login?unauthorise">Unauthorise</a>
+      </li>
+
     </ul>
   </div>
 </nav>

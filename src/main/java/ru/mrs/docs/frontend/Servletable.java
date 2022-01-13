@@ -9,4 +9,8 @@ public interface Servletable {
             //LOGOUT_FORM3 = "<button data-method='DELETE'>doDelete</button>"
 //            ,CALL_BACK_HTEXPR = "<br/><a href='/'>/</a>"
             ;
+    String REDIR_ROOT = //"redirect:" +
+            "/";
+    String AUTHORISED_BEFORE = "User authorised  before in ";
+    String UNAUTHORISED_NOW = "Unauthorized in ";
 }
