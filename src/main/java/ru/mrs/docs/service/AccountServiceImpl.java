@@ -38,7 +38,8 @@ public class AccountServiceImpl extends AccountServiceAbstract<UserProfile> impl
 
     @Override
     public void deleteSession(String sessionId) {
-        throw new NotImplementedException();
+//        throw new NotImplementedException();
+        sessionIdToProfile.get(sessionId);
     }
 
     @Override

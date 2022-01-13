@@ -14,21 +14,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GreetingServlet extends HttpServlet implements Servletable{
+public class OldTableServlet extends HttpServlet implements Servletable{
 
-    private static final Logger LOGGER = LogManager.getLogger(GreetingServlet.class);
+    private static final Logger LOGGER = LogManager.getLogger(OldTableServlet.class);
 
-    public static final String PATH_SPEC = "/greeting";
-
-    private final String moduleName = Main.context.get(PropertyKeys.module_name).toString();
-
+    public static final String PATH_SPEC = "/oldtable";
+    
     private final AccountService accountService = (AccountService)Main.context.get(AccountService.class);
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(COMMON_CONTENT_TYPE);
         UserProfile userProfile = (UserProfile) accountService.getUserBySessionId(request.getSession().getId());
         if (userProfile!=null) {
@@ -51,6 +50,23 @@ public class GreetingServlet extends HttpServlet implements Servletable{
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.sendRedirect(REDIR_ROOT);
             LOGGER.warn(UNAUTHORISED_NOW + PATH_SPEC);
+        }
+
+
+
+
+        Configuration freemarkerConfiguration = (Configuration) Main.context.get(Configuration.class);
+        Template template = null;
+//        String moduleName = ((ConfigHide) Main.context.get(ConfigHide.class)).getMODULE_NAME();
+        Map<String, String> data = new HashMap<>();
+//        data.put("moduleName", moduleName);
+        try ( PrintWriter writer = response.getWriter() ) {
+            template = freemarkerConfiguration.getTemplate("main.ftl");
+            response.setContentType(COMMON_CONTENT_TYPE);
+            response.setStatus(HttpServletResponse.SC_OK);
+            template.process(data, writer);
+        } catch (TemplateException e) {
+            e.printStackTrace();
         }
     }
 

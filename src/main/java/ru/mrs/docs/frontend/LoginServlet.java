@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
-
+@SuppressWarnings("unchecked")
 public class LoginServlet extends HttpServlet implements Servletable{
 
     public static final String PATH_SPEC = "/login";
@@ -34,6 +34,9 @@ public class LoginServlet extends HttpServlet implements Servletable{
                 }
             }
         }
+        response.setStatus(HttpServletResponse.SC_OK);
+        LOGGER.info(UNAUTHORISED_NOW);
+        response.sendRedirect(REDIR_ROOT);
     }
 
     @Override
