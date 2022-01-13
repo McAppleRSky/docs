@@ -65,15 +65,15 @@ public class Main extends MainConfiguration {
         resource_handler.setDirectoriesListed(true);
         resource_handler.setResourceBase( context.get(PropertyKeys.resource_base).toString() );
 
-        ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
-        errorHandler.addErrorPage(404, "missing.html");
+//        ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
+//        errorHandler.addErrorPage(404, "missing.html");
 //        servletContextHandler.setErrorHandler(errorHandler);
-        servletContextHandler.setContextPath(context.get(PropertyKeys.context_path).toString());
+//        servletContextHandler.setContextPath(context.get(PropertyKeys.context_path).toString());
 
         Handler[] handlers = {
                 resource_handler
                 ,servletContextHandler
-                ,errorHandler
+//                ,errorHandler
         };
 
         HandlerList handlerList = new HandlerList();
