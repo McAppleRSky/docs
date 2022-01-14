@@ -8,7 +8,8 @@ import org.apache.logging.log4j.Logger;
 import ru.mrs.base.service.account.AccountService;
 import ru.mrs.docs.Main;
 import ru.mrs.docs.PropertyKeys;
-import ru.mrs.docs.service.UserProfile;
+import ru.mrs.docs.service.account.UserProfile;
+import ru.mrs.docs.service.db.dao.OldTableDAO;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,6 +34,19 @@ public class OldTableServlet extends HttpServlet implements Servletable{
         if (userProfile!=null) {
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC);
             Configuration freemarkerConfiguration = (Configuration) Main.context.get(Configuration.class);
+
+            public UserProfile getUser(String login) throws DBException {
+
+                try {
+                    OldTableDAO dao = new OldTableDAO(//connection //
+                    );
+                    UsersDataSet dataSet = dao.get(login);
+                    return new UserProfile(dataSet.getLogin(), dataSet.getPassword());
+                } catch (SQLException e) {
+                    throw new DBException(e);
+                }
+            }
+
             Template template = null;
             Map<String, String> data = new HashMap<>();
             data.put("login", userProfile.getLogin());

@@ -8,9 +8,8 @@ import org.apache.logging.log4j.Logger;
 import ru.mrs.base.service.account.AccountService;
 import ru.mrs.docs.Main;
 import ru.mrs.docs.PropertyKeys;
-import ru.mrs.docs.service.UserProfile;
+import ru.mrs.docs.service.account.UserProfile;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

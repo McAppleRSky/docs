@@ -1,4 +1,4 @@
-package ru.mrs.docs.service;
+package ru.mrs.docs.service.account;
 
 import ru.mrs.base.service.account.AccountService;
 import ru.mrs.base.service.account.AccountServiceAbstract;

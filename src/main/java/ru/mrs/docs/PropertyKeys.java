@@ -7,6 +7,7 @@ public enum PropertyKeys {
     module_name,
     db_usr_name,
     db_usr_password,
+    db_data_path,
     server_port,
     resource_base,
     context_path

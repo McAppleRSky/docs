@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.mrs.docs.Main;
 import ru.mrs.base.service.account.AccountService;
-import ru.mrs.docs.service.UserProfile;
+import ru.mrs.docs.service.account.UserProfile;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

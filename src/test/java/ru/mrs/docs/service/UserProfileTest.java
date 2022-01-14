@@ -2,6 +2,7 @@ package ru.mrs.docs.service;
 
 import org.apache.commons.lang3.NotImplementedException;
 import ru.mrs.base.service.file.*;
+import ru.mrs.docs.service.account.UserProfile;
 
 import java.io.File;
 import java.util.Iterator;

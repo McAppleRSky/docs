@@ -1,7 +1,5 @@
 package ru.mrs.base.service.account;
 
-import ru.mrs.docs.service.UserProfile;
-
 import java.util.HashMap;
 import java.util.Map;
 

@@ -20,8 +20,10 @@ import ru.mrs.base.service.account.AccountService;
 import ru.mrs.base.service.file.ObjectWriter;
 import ru.mrs.docs.frontend.GreetingServlet;
 import ru.mrs.docs.frontend.LoginServlet;
-import ru.mrs.docs.service.AccountServiceImpl;
-import ru.mrs.docs.service.UserProfile;
+import ru.mrs.docs.service.account.AccountServiceImpl;
+import ru.mrs.docs.service.account.UserProfile;
+import ru.mrs.docs.service.db.DBService;
+import ru.mrs.docs.service.db.DBServiceImpl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,6 +47,13 @@ public class Main extends MainConfiguration {
                         context.get(PropertyKeys.default_user),
                         context.get(PropertyKeys.default_prof) ) );
         context.put(freemarker.template.Configuration.class, configureFreemarker());
+        context.put(
+                DBService.class, configureDBService(
+                        context.get(PropertyKeys.db_usr_name),
+                        context.get(PropertyKeys.db_usr_password),
+                        context.get(PropertyKeys.db_data_path)
+                        ) );
+
 //        context.put( AccountService.class, configureAccountService( (AccountService)context.get(AccountServiceImpl.class) ) );
     }
 
@@ -97,17 +106,6 @@ public class Main extends MainConfiguration {
 //@SuppressWarnings( "deprecation" )
 class MainConfiguration {
 
-    private static final boolean OS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
-
-    private static final String[]
-            PROPERTY_FILES = {"docs-hide.properties", "docs.properties"};
-    private static final EnumSet<PropertyKeys>
-            RESOURCES_PROPERTIES = EnumSet.of(
-                    PropertyKeys.resource_base
-                    ,PropertyKeys.default_prof
-                    ,PropertyKeys.context_path
-    );
-
     protected static Logger configureLogger(Class c){
         ConfigurationBuilder<BuiltConfiguration> cfgBuilder = ConfigurationBuilderFactory.newConfigurationBuilder();
         cfgBuilder
@@ -141,9 +139,13 @@ class MainConfiguration {
     }
 
     protected static Map loadProperties() {
+        EnumSet<PropertyKeys> RESOURCES_PROPERTIES = EnumSet.of(
+                PropertyKeys.resource_base
+                ,PropertyKeys.default_prof
+                ,PropertyKeys.context_path );
         Map<PropertyKeys, String> mapEnumString = new HashMap<>();
         Properties properties = new Properties();
-        for (String propertyFile : PROPERTY_FILES) {
+        for (String propertyFile : new String[]{"docs-hide.properties", "docs.properties"}) {
             try (InputStream input = MainConfiguration.class.getClassLoader().getResourceAsStream(propertyFile)) {
                 properties.load(input);
             }catch (FileNotFoundException e) {
@@ -158,7 +160,7 @@ class MainConfiguration {
                 if (RESOURCES_PROPERTIES.contains(propertyKey)) {
                     propertyString = MainConfiguration.class.getClassLoader()
                             .getResource(propertyString).getPath();
-                    if (OS_WINDOWS) {
+                    if (System.getProperty("os.name").startsWith("Windows")) {
                         propertyString = propertyString.substring(1);
                     }
                 }
@@ -189,6 +191,10 @@ class MainConfiguration {
     protected static AccountService<UserProfile> configureAccountService(Object defaultLogin, Object defaultProfile) {
         UserProfile userProfile = (UserProfile)ObjectWriter.read(defaultProfile.toString());
         return new AccountServiceImpl(defaultLogin.toString(), userProfile);
+    }
+
+    protected static DBService configureDBService(Object name, Object pass, Object path) {
+        return new DBServiceImpl(name.toString(), pass.toString(), path.toString());
     }
 
 }

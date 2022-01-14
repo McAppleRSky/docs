@@ -1,4 +1,4 @@
-package ru.mrs.docs.service;
+package ru.mrs.docs.service.account;
 
 
 import lombok.*;
