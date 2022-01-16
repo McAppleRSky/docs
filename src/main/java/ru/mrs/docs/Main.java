@@ -20,6 +20,7 @@ import ru.mrs.base.service.account.AccountService;
 import ru.mrs.base.service.file.ObjectWriter;
 import ru.mrs.docs.frontend.GreetingServlet;
 import ru.mrs.docs.frontend.LoginServlet;
+import ru.mrs.docs.frontend.OldTableServlet;
 import ru.mrs.docs.service.account.AccountServiceImpl;
 import ru.mrs.docs.service.account.UserProfile;
 import ru.mrs.docs.service.db.DBService;
@@ -53,7 +54,6 @@ public class Main extends MainConfiguration {
                         context.get(PropertyKeys.DB_USR_PASSWORD),
                         context.get(PropertyKeys.DB_DATA_PATH)
                         ) );
-
 //        context.put( AccountService.class, configureAccountService( (AccountService)context.get(AccountServiceImpl.class) ) );
     }
 
@@ -68,6 +68,7 @@ public class Main extends MainConfiguration {
 //        servletContextHandler.addServlet(new ServletHolder( new WebSocketChatServlet() ), WebSocketChatServlet.PATH);
 
 //        servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.URL);
+        servletContextHandler.addServlet( new ServletHolder( new OldTableServlet() ), OldTableServlet.PATH_SPEC);
         servletContextHandler.addServlet( new ServletHolder( new LoginServlet() ), LoginServlet.PATH_SPEC);
         servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.PATH_SPEC);
         ResourceHandler resource_handler = new ResourceHandler();
@@ -139,10 +140,12 @@ class MainConfiguration {
     }
 
     protected static Map loadProperties() {
-        EnumSet<PropertyKeys> RESOURCES_PROPERTIES = EnumSet.of(
+        EnumSet<PropertyKeys> RESOURCE_LOCATED = EnumSet.of(
                 PropertyKeys.RESOURCE_BASE
                 ,PropertyKeys.DEFAULT_PROF
                 ,PropertyKeys.CONTEXT_PATH );
+        EnumSet<PropertyKeys> SOURCE_LOCATED = EnumSet.of(
+                PropertyKeys.DB_DATA_PATH );
         Map<PropertyKeys, String> mapEnumString = new HashMap<>();
         Properties properties = new Properties();
         for (String propertyFile : new String[]{"docs-hide.properties", "docs.properties"}) {
@@ -154,14 +157,29 @@ class MainConfiguration {
                 ex.printStackTrace();
             }
         }
+        boolean osWindows = System.getProperty("os.name").startsWith("Windows");
         for (PropertyKeys propertyKey : PropertyKeys.values()) {
             String propertyString = properties.getProperty(propertyKey.toString());
             if (propertyString != null) {
-                if (RESOURCES_PROPERTIES.contains(propertyKey)) {
-                    propertyString = MainConfiguration.class.getClassLoader()
-                            .getResource(propertyString).getPath();
-                    if (System.getProperty("os.name").startsWith("Windows")) {
+                if (RESOURCE_LOCATED.contains(propertyKey)) {
+                    propertyString = MainConfiguration.class
+                            .getClassLoader()
+                            .getResource(propertyString)
+                            .getPath();
+                    if (osWindows) {
                         propertyString = propertyString.substring(1);
+                    }
+                } else {
+                    if (SOURCE_LOCATED.contains(propertyKey)) {
+                        // https://stackoverflow.com/questions/320542/how-to-get-the-path-of-a-running-jar-file
+                        propertyString = MainConfiguration.class
+                                .getProtectionDomain()
+                                .getCodeSource()
+                                .getLocation()
+                                .getPath() + propertyString;
+                        if (osWindows) {
+                            propertyString = propertyString.substring(1);
+                        }
                     }
                 }
                 mapEnumString.put(propertyKey,propertyString);

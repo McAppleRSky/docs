@@ -8,7 +8,7 @@ public enum PropertyKeys {
     DEFAULT_PASS(
             "default.pass" ),
     MODULE_NAME(
-            "module.name" ),
+            "content_value_module_name" ),
     DB_USR_NAME(
             "db.usr.name" ),
     DB_USR_PASSWORD(

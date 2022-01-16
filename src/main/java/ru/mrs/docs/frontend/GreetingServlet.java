@@ -1,6 +1,5 @@
 package ru.mrs.docs.frontend;
 
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
@@ -32,7 +31,9 @@ public class GreetingServlet extends HttpServlet implements Servletable{
         UserProfile userProfile = (UserProfile) accountService.getUserBySessionId(request.getSession().getId());
         if (userProfile!=null) {
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC);
-            Configuration freemarkerConfiguration = (Configuration) Main.context.get(Configuration.class);
+            freemarker.template.Configuration
+                    freemarkerConfiguration = (freemarker.template.Configuration)Main.context.get(
+                            freemarker.template.Configuration.class );
             Template template = null;
             Map<String, String> data = new HashMap<>();
             data.put("login", userProfile.getLogin());

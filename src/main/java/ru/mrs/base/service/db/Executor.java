@@ -17,15 +17,15 @@ public class Executor {
         stmt.close();
     }
 
-    public <T> T execQuery(String query, ResultHandler<T> handler)
-            throws SQLException {
-        Statement stmt = connection.createStatement();
-        stmt.execute(query);
-        ResultSet result = stmt.getResultSet();
-        T value = handler.handle(result);
-        result.close();
-        stmt.close();
-        return value;
+    public <T> T execQuery(String query, ResultHandler<T> handler) throws SQLException {
+        T result = null;
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(query);
+            try (ResultSet resultSet = stmt.getResultSet()) {
+                result = handler.handle(resultSet);
+            }
+        }
+        return result;
     }
 
     public void execUpdate(Map<Integer, String> idToName) {

@@ -15,11 +15,11 @@ public class OldTableDataSet {
     private Integer
             id;
     private String
-            urlSedInput;
+            urlIn;
     private String
-            generalOrgNumb;
+            genOrgNumb;
     private Date
-            generalOrgDate;
+            genOrgDate;
     private String
             outputNumb;
     private Date
@@ -35,13 +35,13 @@ public class OldTableDataSet {
     private Date
             handPass;
     private Date
-            AnswerComplete;
+            AnswerComp;
     private Date
             answerDate;
     private String
             answerNumb;
     private String
-            urlSedOutput;
+            urlOut;
     private String
             note;
 
