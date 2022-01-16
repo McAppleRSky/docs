@@ -1,6 +1,7 @@
 package ru.mrs.docs.service.db.dao;
 
 import ru.mrs.base.service.db.Executor;
+import ru.mrs.docs.service.db.dataSet.OldTableColumns;
 import ru.mrs.docs.service.db.dataSet.OldTableDataSet;
 
 import java.sql.Connection;
@@ -36,15 +37,20 @@ public class OldTableDAO {
             result.next();
             return new OldTableDataSet()
                     .setId(
-                            result.getInt(1) )
+                            result.getInt(
+                                    OldTableColumns.ID.toString() ) )
                     .setUrlSedInput(
-                            result.getString(2) )
+                            result.getString(
+                                    OldTableColumns.URL_SED_INPUT.toString() ) )
                     .setFromOwner(
-                            result.getString(7) )
+                            result.getString(
+                                    OldTableColumns.FROM_OWNER.toString() ) )
                     .setWorker(
-                            result.getString(10) )
+                            result.getString(
+                                    OldTableColumns.WORKER.toString() ) )
                     .setUrlSedOutput(
-                            result.getString(15) );
+                            result.getString(
+                                    OldTableColumns.URL_SED_OUTPUT.toString() ) );
         });
     }
 }

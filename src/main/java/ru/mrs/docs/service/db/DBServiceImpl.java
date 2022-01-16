@@ -30,6 +30,7 @@ public class DBServiceImpl implements DBService {
         try(Connection connection = DriverManager.getConnection(url, name, pass)){
             OldTableDAO oldTableDAO = new OldTableDAO(connection);
             List<OldTableDataSet> docs = (List<OldTableDataSet>) oldTableDAO.docs();
+            System.out.println();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

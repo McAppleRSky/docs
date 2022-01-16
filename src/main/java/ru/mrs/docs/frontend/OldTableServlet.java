@@ -38,9 +38,9 @@ public class OldTableServlet extends HttpServlet implements Servletable{
         UserProfile userProfile = (UserProfile) accountService.getUserBySessionId(request.getSession().getId());
         if (userProfile!=null) {
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC);
+            dbService.allDocuments();
             Configuration freemarkerConfiguration = (Configuration) Main.context.get(Configuration.class);
 
-            dbService.allDocuments();
 
             Template template = null;
             Map<String, String> data = new HashMap<>();
