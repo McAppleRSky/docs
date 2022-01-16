@@ -44,14 +44,14 @@ public class Main extends MainConfiguration {
         context.putAll(loadProperties());
         context.put(
                 AccountService.class, configureAccountService(
-                        context.get(PropertyKeys.default_user),
-                        context.get(PropertyKeys.default_prof) ) );
+                        context.get(PropertyKeys.DEFAULT_USER),
+                        context.get(PropertyKeys.DEFAULT_PROF) ) );
         context.put(freemarker.template.Configuration.class, configureFreemarker());
         context.put(
                 DBService.class, configureDBService(
-                        context.get(PropertyKeys.db_usr_name),
-                        context.get(PropertyKeys.db_usr_password),
-                        context.get(PropertyKeys.db_data_path)
+                        context.get(PropertyKeys.DB_USR_NAME),
+                        context.get(PropertyKeys.DB_USR_PASSWORD),
+                        context.get(PropertyKeys.DB_DATA_PATH)
                         ) );
 
 //        context.put( AccountService.class, configureAccountService( (AccountService)context.get(AccountServiceImpl.class) ) );
@@ -72,7 +72,7 @@ public class Main extends MainConfiguration {
         servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.PATH_SPEC);
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase( context.get(PropertyKeys.resource_base).toString() );
+        resource_handler.setResourceBase( context.get(PropertyKeys.RESOURCE_BASE).toString() );
 
 //        ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
 //        errorHandler.addErrorPage(404, "missing.html");
@@ -93,7 +93,7 @@ public class Main extends MainConfiguration {
         servletContextHandler.setErrorHandler(errorHandler);*/
 
 //        int port = ;
-        Server server = new Server( Integer.parseInt( Main.context.get( PropertyKeys.server_port ).toString() ) );
+        Server server = new Server( Integer.parseInt( Main.context.get( PropertyKeys.SERVER_PORT ).toString() ) );
 //        server.setHandler(servletContextHandler);
         server.setHandler(handlerList);
         server.start();
@@ -140,9 +140,9 @@ class MainConfiguration {
 
     protected static Map loadProperties() {
         EnumSet<PropertyKeys> RESOURCES_PROPERTIES = EnumSet.of(
-                PropertyKeys.resource_base
-                ,PropertyKeys.default_prof
-                ,PropertyKeys.context_path );
+                PropertyKeys.RESOURCE_BASE
+                ,PropertyKeys.DEFAULT_PROF
+                ,PropertyKeys.CONTEXT_PATH );
         Map<PropertyKeys, String> mapEnumString = new HashMap<>();
         Properties properties = new Properties();
         for (String propertyFile : new String[]{"docs-hide.properties", "docs.properties"}) {

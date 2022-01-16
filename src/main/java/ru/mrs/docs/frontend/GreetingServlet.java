@@ -23,7 +23,7 @@ public class GreetingServlet extends HttpServlet implements Servletable{
 
     public static final String PATH_SPEC = "/greeting";
 
-    private final String moduleName = Main.context.get(PropertyKeys.module_name).toString();
+    private final String moduleName = Main.context.get(PropertyKeys.MODULE_NAME).toString();
 
     private final AccountService accountService = (AccountService)Main.context.get(AccountService.class);
 
@@ -36,7 +36,7 @@ public class GreetingServlet extends HttpServlet implements Servletable{
             Template template = null;
             Map<String, String> data = new HashMap<>();
             data.put("login", userProfile.getLogin());
-            data.put(PropertyKeys.module_name.toString(), moduleName);
+            data.put(PropertyKeys.MODULE_NAME.toString(), moduleName);
             try ( PrintWriter writer = response.getWriter() ) {
                 template = freemarkerConfiguration.getTemplate("greeting.ftl");
                 response.setContentType(COMMON_CONTENT_TYPE);

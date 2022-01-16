@@ -9,6 +9,8 @@ import ru.mrs.base.service.account.AccountService;
 import ru.mrs.docs.Main;
 import ru.mrs.docs.PropertyKeys;
 import ru.mrs.docs.service.account.UserProfile;
+import ru.mrs.docs.service.db.DBService;
+import ru.mrs.docs.service.db.DBServiceImpl;
 import ru.mrs.docs.service.db.dao.OldTableDAO;
 
 import javax.servlet.ServletException;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +31,8 @@ public class OldTableServlet extends HttpServlet implements Servletable{
     
     private final AccountService accountService = (AccountService)Main.context.get(AccountService.class);
 
+    private final DBService dbService = new DBServiceImpl(null,null,null);
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(COMMON_CONTENT_TYPE);
         UserProfile userProfile = (UserProfile) accountService.getUserBySessionId(request.getSession().getId());
@@ -35,22 +40,12 @@ public class OldTableServlet extends HttpServlet implements Servletable{
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC);
             Configuration freemarkerConfiguration = (Configuration) Main.context.get(Configuration.class);
 
-            public UserProfile getUser(String login) throws DBException {
-
-                try {
-                    OldTableDAO dao = new OldTableDAO(//connection //
-                    );
-                    UsersDataSet dataSet = dao.get(login);
-                    return new UserProfile(dataSet.getLogin(), dataSet.getPassword());
-                } catch (SQLException e) {
-                    throw new DBException(e);
-                }
-            }
+            dbService.allDocuments();
 
             Template template = null;
             Map<String, String> data = new HashMap<>();
             data.put("login", userProfile.getLogin());
-            data.put(PropertyKeys.module_name.toString(), moduleName);
+//            data.put(PropertyKeys.module_name.toString(), moduleName);
             try ( PrintWriter writer = response.getWriter() ) {
                 template = freemarkerConfiguration.getTemplate("greeting.ftl");
                 response.setContentType(COMMON_CONTENT_TYPE);

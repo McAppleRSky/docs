@@ -1,5 +1,5 @@
 org.hsqldb.jdbcDriver
-jdbc:hsqldb:file:/mnt/d/dev/docs/data/hdb
+jdbc:hsqldb:file:
 
 CREATE TABLE PUBLIC.OLD_MAIN_TABLE (
 	ID INTEGER,

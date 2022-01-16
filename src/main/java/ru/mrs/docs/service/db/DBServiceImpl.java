@@ -3,10 +3,13 @@ package ru.mrs.docs.service.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.h2.jdbcx.JdbcDataSource;
+import ru.mrs.docs.service.db.dao.OldTableDAO;
+import ru.mrs.docs.service.db.dataSet.OldTableDataSet;
 
 public class DBServiceImpl implements DBService {
 
@@ -22,8 +25,13 @@ public class DBServiceImpl implements DBService {
 //        this.connection = DriverManager.getConnection("jdbc:h2:file:" + path, name, pass);
     }
 
-    public UserProfile getOldTable(String login) throws DBException {
-
+    @Override
+    public void allDocuments() {
+        try(Connection connection = DriverManager.getConnection(url, name, pass)){
+            OldTableDAO oldTableDAO = new OldTableDAO(connection);
+            List<OldTableDataSet> docs = (List<OldTableDataSet>) oldTableDAO.docs();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
-
 }
