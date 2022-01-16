@@ -1,7 +1,6 @@
 <#macro page>
   <!DOCTYPE html>
   <html lang="en">
-
   <head>
     <title>Docs</title>
     <!--    https://getbootstrap.com/docs/4.6/getting-started/introduction/-->
@@ -11,7 +10,6 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/style.css">
-    <script src='https://www.google.com/recaptcha/api.js'></script>
   </head>
 
   <body>
