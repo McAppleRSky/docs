@@ -63,19 +63,22 @@ public class OldTableServlet extends HttpServlet implements Servletable {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(COMMON_CONTENT_TYPE);
         UserProfile userProfile = (UserProfile) accountService.getUserBySessionId(request.getSession().getId());
+        Map<OldTableColumns, String> columnToValues = new HashMap<>();
         if (userProfile != null) {
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC + " method Post");
-            Map<String, String[]> parameterMap = request.getParameterMap();
-            PostVars postVar = parameterMap.get(OldTableColumns.ID.toString())==null ? PostVars.CREATE : PostVars.UPDATE;
+            for (OldTableColumns oldTableColumns : OldTableColumns.values()) {
+                columnToValues.put(oldTableColumns, request.getParameter(oldTableColumns.toString()));
+            }
+            PostVars postVar = columnToValues.get(OldTableColumns.ID)==null ? PostVars.CREATE : PostVars.UPDATE;
             switch (postVar) {
                 case CREATE:
-                    int created = dbService.createDocsOldTable(parameterMap);
+                    int created = dbService.createDocsOldTable(columnToValues);
                     LOGGER.info(PATH_SPEC + " created " + created);
                     response.setStatus(HttpServletResponse.SC_OK);
                     response.sendRedirect(PATH_SPEC);
                     break;
                 case UPDATE:
-                    int opened = dbService.updateOldTable(parameterMap);
+                    int opened = dbService.updateOldTable(columnToValues);
                     LOGGER.warn(PATH_SPEC + " opened " + opened);
                     response.setStatus(HttpServletResponse.SC_OK);
                     response.sendRedirect(PATH_SPEC);

@@ -46,7 +46,7 @@ public class OldTableDAOImpl implements OldTableDAO {
     }
 
     @Override
-    public Integer createDocsOldTable(Map<String, String[]> parameterMap) throws SQLException {
+    public Integer createDocsOldTable(Map<OldTableColumns, String> parameterMap) throws SQLException {
         String columns = OldTableColumns.URL_SED_INPUT
                 + ", " + OldTableColumns.FROM_OWNER
                 + ", " + OldTableColumns.WORKER
@@ -54,18 +54,19 @@ public class OldTableDAOImpl implements OldTableDAO {
         String query = String.format(
                 "insert into OLD_MAIN_TABLE (%s) VALUES (%s, %s, %s, %s);",
                 columns,
-                parameterMap.get(OldTableColumns.URL_SED_INPUT.toString()),
-                parameterMap.get(OldTableColumns.FROM_OWNER.toString()),
-                parameterMap.get(OldTableColumns.WORKER.toString()),
-                parameterMap.get(OldTableColumns.URL_SED_OUTPUT.toString()) );
+                parameterMap.get(OldTableColumns.URL_SED_INPUT),
+                parameterMap.get(OldTableColumns.FROM_OWNER),
+                parameterMap.get(OldTableColumns.WORKER),
+                parameterMap.get(OldTableColumns.URL_SED_OUTPUT) );
         return executor.execQuery(query, resultSet -> {
             Integer result = 0;
+            System.out.println(resultSet);
             return result;
         });
     }
 
     @Override
-    public Integer updateDocsOldTable(Map<String, String[]> parameterMap) {
+    public Integer updateDocsOldTable(Map<OldTableColumns, String> parameterMap) {
         return null;
     }
 }

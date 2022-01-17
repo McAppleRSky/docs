@@ -70,35 +70,35 @@
               </tr>
               <tr>
                 <td><label for="urlInput">URL_INPUT</label></td>
-                <td><input type="text" class="values" id="urlInput" name="URL_INPUT"></td>
+                <td><input type="text" class="values" id="urlInput" name="URL_SED_INPUT"></td>
               </tr>
               <tr>
                 <td><label for="gNumb">G_NUMB</label></td>
-                <td><input type="text" class="values" id="gNumb" name="G_NUMB"></td>
+                <td><input type="text" class="values" id="gNumb" name="GENERAL_ORG_NUMB"></td>
               </tr>
               <tr>
                 <td><label for="gDate">G_DATE</label></td>
-                <td><input type="text" class="values" id="gDate" name="G_DATE"></td>
+                <td><input type="text" class="values" id="gDate" name="GENERAL_ORG_DATE"></td>
               </tr>
               <tr>
                 <td><label for="outNumb">OUT_NUMB</label></td>
-                <td><input type="text" class="values" id="outNumb" name="OUT_NUMB"></td>
+                <td><input type="text" class="values" id="outNumb" name="OUTPUT_NUMB"></td>
               </tr>
               <tr>
                 <td><label for="outDate">OUT_DATE</label></td>
-                <td><input type="text" class="values" id="outDate" name="OUT_DATE"></td>
+                <td><input type="text" class="values" id="outDate" name="OUTPUT_DATE"></td>
               </tr>
               <tr>
                 <td><label for="owner">OWNER</label></td>
-                <td><input type="text" class="values" id="owner" name="OWNER"></td>
+                <td><input type="text" class="values" id="owner" name="FROM_OWNER"></td>
               </tr>
               <tr>
                 <td><label for="inDate">IN_DATE</label></td>
-                <td><input type="text" class="values" id="inDate" name="IN_DATE"></td>
+                <td><input type="text" class="values" id="inDate" name="INPUT_DATE"></td>
               </tr>
               <tr>
                 <td><label for="inNumb">IN_NUMB</label></td>
-                <td><input type="text" class="values" id="inNumb" name="IN_NUMB"></td>
+                <td><input type="text" class="values" id="inNumb" name="INPUT_NUMB"></td>
               </tr>
               <tr>
                 <td><label for="worker">WORKER</label></td>
@@ -110,19 +110,19 @@
               </tr>
               <tr>
                 <td><label for="complete">COMPLETE</label></td>
-                <td><input type="text" class="values" id="complete" name="COMPLETE"></td>
+                <td><input type="text" class="values" id="complete" name="ANSWER_COMPLETE"></td>
               </tr>
               <tr>
                 <td><label for="completeDate">COMPLETE_DATE</label></td>
-                <td><input type="text" class="values" id="completeDate" name="COMPLETE_DATE"></td>
+                <td><input type="text" class="values" id="completeDate" name="ANSWER_DATE"></td>
               </tr>
               <tr>
                 <td><label for="completeNumb">COMPLETE_NUMB</label></td>
-                <td><input type="text" class="values" id="completeNumb" name="COMPLETE_NUMB"></td>
+                <td><input type="text" class="values" id="completeNumb" name="ANSWER_NUMB"></td>
               </tr>
               <tr>
                 <td><label for="urlOutput">URL_OUTPUT</label></td>
-                <td><input type="text" class="values" id="urlOutput" name="URL_OUTPUT"></td>
+                <td><input type="text" class="values" id="urlOutput" name="URL_SED_OUTPUT"></td>
               </tr>
               <tr>
                 <td><label for="note">NOTE</label></td>

@@ -1,11 +1,16 @@
 package ru.mrs.base.service.db;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ru.mrs.docs.frontend.OldTableServlet;
 import ru.mrs.docs.service.db.dataSet.OldTableColumns;
 
 import java.sql.*;
 import java.util.Map;
 
 public class Executor {
+
+    private static final Logger LOGGER = LogManager.getLogger(Executor.class);
 
     private final Connection connection;
 
@@ -16,9 +21,12 @@ public class Executor {
     public <T> T execQuery(String query, ResultHandler<T> handler) throws SQLException {
         T result = null;
         try (Statement stmt = connection.createStatement()) {
-            stmt.execute(query);
+            boolean execute = stmt.execute(query);
+            LOGGER.info(query + "\nreturn " + execute);
             try (ResultSet resultSet = stmt.getResultSet()) {
                 result = handler.handle(resultSet);
+//                ResultSetMetaData metaData = resultSet.getMetaData();
+                LOGGER.info("Deleted " + resultSet.rowDeleted() + ", inserted " + resultSet.rowInserted() + "updated" + resultSet.rowUpdated());
             }
         }
         return result;

@@ -37,7 +37,7 @@ public class DBServiceImpl implements DBService {
     }
 
     @Override
-    public int createDocsOldTable(Map<String, String[]> parameterMap) {
+    public int createDocsOldTable(Map<OldTableColumns, String> parameterMap) {
         Integer result = null;
         try(Connection connection = DriverManager.getConnection(url, name, pass)){
             result = new OldTableDAOImpl(connection).createDocsOldTable(parameterMap);
@@ -48,7 +48,7 @@ public class DBServiceImpl implements DBService {
     }
 
     @Override
-    public int updateOldTable(Map<String, String[]> parameterMap) {
+    public int updateOldTable(Map<OldTableColumns, String> parameterMap) {
         Integer result = null;
         try(Connection connection = DriverManager.getConnection(url, name, pass)){
             result = new OldTableDAOImpl(connection).updateDocsOldTable(parameterMap);
