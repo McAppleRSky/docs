@@ -45,12 +45,12 @@
   <#list old_docs_tables as docs>
     <tr>
       <td>${(docs.id)!"-"}</td>
-      <td>${(docs.urlIn)!"-"}</td>
+      <td nowrap>${(docs.urlIn)!"-"}</td>
       <td>${(docs.genOrgNumb)!"-"}</td>
       <td>${(docs.genOrgDate)!"-"}</td>
       <td>${(docs.outputNumb)!"-"}</td>
       <td>${(docs.outputDate)!"-"}</td>
-      <td>${(docs.fromOwner)!"-"}</td>
+      <td nowrap>${(docs.fromOwner)!"-"}</td>
       <td>${(docs.inputDate)!"-"}</td>
       <td>${(docs.inputNumb)!"-"}</td>
       <td>${(docs.worker)!"-"}</td>
@@ -58,7 +58,7 @@
       <td>${(docs.answerComp)!"-"}</td>
       <td>${(docs.answerDate)!"-"}</td>
       <td>${(docs.answerNumb)!"-"}</td>
-      <td>${(docs.urlOut)!"-"}</td>
+      <td nowrap>${(docs.urlOut)!"-"}</td>
       <td>${(docs.note)!"-"}</td>
     </tr>
   <#else>No message</#list>
