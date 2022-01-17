@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
-import ru.mrs.docs.service.db.dao.OldTableDAO;
+import ru.mrs.docs.service.db.dao.OldTableDAOImpl;
+import ru.mrs.docs.service.db.dataSet.OldTableColumns;
 import ru.mrs.docs.service.db.dataSet.OldTableDataSet;
 
 public class DBServiceImpl implements DBService {
@@ -23,15 +25,37 @@ public class DBServiceImpl implements DBService {
     }
 
     @Override
-    public List<OldTableDataSet> allDocuments() {
+    public List<OldTableDataSet> allDocs() {
         List<OldTableDataSet> oldTableList = null;
         try(Connection connection = DriverManager.getConnection(url, name, pass)){
-            OldTableDAO oldTableDAO = new OldTableDAO(connection);
+            OldTableDAOImpl oldTableDAO = new OldTableDAOImpl(connection);
             oldTableList = oldTableDAO.getOldTableList();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return oldTableList;
+    }
+
+    @Override
+    public int createDocsOldTable(Map<String, String[]> parameterMap) {
+        Integer result = null;
+        try(Connection connection = DriverManager.getConnection(url, name, pass)){
+            result = new OldTableDAOImpl(connection).createDocsOldTable(parameterMap);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public int updateOldTable(Map<String, String[]> parameterMap) {
+        Integer result = null;
+        try(Connection connection = DriverManager.getConnection(url, name, pass)){
+            result = new OldTableDAOImpl(connection).updateDocsOldTable(parameterMap);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
     }
 
 }

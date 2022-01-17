@@ -3,6 +3,15 @@
   <html lang="en">
   <head>
     <title>Docs</title>
+    <style type="text/css">
+       .hidden {
+            display: none;
+       }
+       .visible {
+            display: block;
+            outline: 2px solid #000;
+       }
+    </style>
     <!--    https://getbootstrap.com/docs/4.6/getting-started/introduction/-->
     <!-- Required meta tags -->
     <meta charset="UTF-8">
