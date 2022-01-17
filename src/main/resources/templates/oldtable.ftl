@@ -1,6 +1,6 @@
 <#import "parts/common.ftl" as c>
 <@c.page>
-<table id="oldTable">
+<table id="oldTable" style="text-align: center;">
 <script>
   var table = document.getElementById("oldTable");
 

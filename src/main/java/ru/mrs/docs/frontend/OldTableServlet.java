@@ -36,6 +36,7 @@ public class OldTableServlet extends HttpServlet implements Servletable{
         if (userProfile!=null) {
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC);
             List<OldTableDataSet> oldTableDataSets = dbService.allDocuments();
+            oldTableDataSets.sort((a, b) -> {return a.getId() - b.getId();});
             Map <String, Object> data = new HashMap<>();
             data.put("old_docs_tables", oldTableDataSets);
             freemarker.template.Configuration freemarkerConfiguration =
