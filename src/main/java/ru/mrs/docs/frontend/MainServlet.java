@@ -8,6 +8,9 @@ import ru.mrs.base.service.account.AccountService;
 import ru.mrs.docs.Main;
 import ru.mrs.docs.service.account.UserProfile;
 import ru.mrs.docs.service.db.DBService;
+import ru.mrs.docs.service.db.MainService;
+import ru.mrs.docs.service.db.dataSet.MainColumns;
+import ru.mrs.docs.service.db.dataSet.MainEntity;
 import ru.mrs.docs.service.db.dataSet.OldTableColumns;
 import ru.mrs.docs.service.db.dataSet.OldTableDataSet;
 
@@ -21,15 +24,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OldTableServlet extends HttpServlet implements Servletable {
+public class MainServlet extends HttpServlet implements Servletable {
 
-    private static final Logger LOGGER = LogManager.getLogger(OldTableServlet.class);
+    private static final Logger LOGGER = LogManager.getLogger(MainServlet.class);
 
-    public static final String PATH_SPEC = "/oldtable";
+    public static final String PATH_SPEC = "/main";
 
     private final AccountService accountService = (AccountService) Main.context.get(AccountService.class);
 
-    private final DBService dbService = (DBService) Main.context.get(DBService.class);
+    private final MainService mainService = (MainService) Main.context.get(MainService.class);
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,15 +40,15 @@ public class OldTableServlet extends HttpServlet implements Servletable {
         UserProfile userProfile = (UserProfile) accountService.getUserBySessionId(request.getSession().getId());
         if (userProfile != null) {
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC + " method Get");
-            List<OldTableDataSet> oldTableDataSets = dbService.allDocs();
-            oldTableDataSets.sort((a, b) -> b.getId() - a.getId());
+            List<MainEntity> entities = mainService.findAll();
+            entities.sort((a, b) -> b.getId() - a.getId());
             Map<String, Object> data = new HashMap<>();
-            data.put("old_docs_tables", oldTableDataSets);
+            data.put("main_entities", entities);
             freemarker.template.Configuration freemarkerConfiguration =
                     (freemarker.template.Configuration) Main.context.get(
                             freemarker.template.Configuration.class);
             try (PrintWriter writer = response.getWriter()) {
-                Template template = freemarkerConfiguration.getTemplate("oldtable.ftl");
+                Template template = freemarkerConfiguration.getTemplate("main.ftl");
                 response.setContentType(COMMON_CONTENT_TYPE);
                 response.setStatus(HttpServletResponse.SC_OK);
                 template.process(data, writer);
@@ -63,22 +66,23 @@ public class OldTableServlet extends HttpServlet implements Servletable {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(COMMON_CONTENT_TYPE);
         UserProfile userProfile = (UserProfile) accountService.getUserBySessionId(request.getSession().getId());
-        Map<OldTableColumns, String> columnToValues = new HashMap<>();
+        Map<MainColumns, String> columnToValues;
         if (userProfile != null) {
+            columnToValues = new HashMap<>();
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC + " method Post");
-            for (OldTableColumns oldTableColumns : OldTableColumns.values()) {
-                columnToValues.put(oldTableColumns, request.getParameter(oldTableColumns.toString()));
+            for (MainColumns columns : MainColumns.values()) {
+                columnToValues.put(columns, request.getParameter(columns.toString()));
             }
-            PostVars postVar = columnToValues.get(OldTableColumns.ID)==null ? PostVars.CREATE : PostVars.UPDATE;
+            PostVars postVar = columnToValues.get(MainColumns.ID)==null ? PostVars.CREATE : PostVars.UPDATE;
             switch (postVar) {
                 case CREATE:
-                    int created = dbService.createDocsOldTable(columnToValues);
+                    int created = mainService.create(columnToValues);
                     LOGGER.info(PATH_SPEC + " created " + created);
                     response.setStatus(HttpServletResponse.SC_OK);
                     response.sendRedirect(PATH_SPEC);
                     break;
                 case UPDATE:
-                    int opened = dbService.updateOldTable(columnToValues);
+                    int opened = mainService.update(columnToValues);
                     LOGGER.warn(PATH_SPEC + " opened " + opened);
                     response.setStatus(HttpServletResponse.SC_OK);
                     response.sendRedirect(PATH_SPEC);
@@ -87,12 +91,12 @@ public class OldTableServlet extends HttpServlet implements Servletable {
                     throw new IllegalStateException("Unexpected value: " + postVar);
             }
 
-            List<OldTableDataSet> oldTableDataSets = dbService.allDocs();
-/*
+            /*List<MainEntity> entities = mainService.findAll();
+*//*
             oldTableDataSets.sort((a, b) -> {
                 return a.getId() - b.getId();
             });
-*/
+*//*
             Map<String, Object> data = new HashMap<>();
             data.put("old_docs_tables", oldTableDataSets);
             freemarker.template.Configuration freemarkerConfiguration =
@@ -107,7 +111,7 @@ public class OldTableServlet extends HttpServlet implements Servletable {
                 template.process(data, writer);
             } catch (TemplateException e) {
                 e.printStackTrace();
-            }
+            }*/
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.sendRedirect(REDIR_ROOT);

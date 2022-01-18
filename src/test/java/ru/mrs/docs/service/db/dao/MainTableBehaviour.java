@@ -129,7 +129,7 @@ public class MainTableBehaviour {
                 "old.%s, old.%s, old.%s, " +
                 "old.%s, old.%s, old.%s \n\t\t" +
                 "FROM OLD_MAIN_TABLE AS old \n\t\t" +
-                "ORDER BY old.%s DESC;" ;
+                "ORDER BY old.%s;" ;
         String queryInsert = String.format(
                 queryInsertTemplate,
                 MainColumns.URL_INPUT,  MainColumns.GEN_ORG_NUMB,MainColumns.GEN_ORG_DATE,

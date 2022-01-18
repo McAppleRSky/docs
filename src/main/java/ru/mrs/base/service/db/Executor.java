@@ -2,11 +2,8 @@ package ru.mrs.base.service.db;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.mrs.docs.frontend.OldTableServlet;
-import ru.mrs.docs.service.db.dataSet.OldTableColumns;
 
 import java.sql.*;
-import java.util.Map;
 
 public class Executor {
 
@@ -21,7 +18,7 @@ public class Executor {
         this.connection = connection;
     }
 
-    public <T> T execQuery(String query, ResultHandler<T> handler) throws SQLException {
+    public <T> T execQuery(String query, ResultHandler<T> handler) {
         T result = null;
         Boolean execute = null;
         try (Statement stmt = connection.createStatement()) {
@@ -32,16 +29,20 @@ public class Executor {
                 ResultSetMetaData metaData = resultSet.getMetaData();
                 LOGGER.info("Deleted " + resultSet.rowDeleted() + ", inserted " + resultSet.rowInserted() + "updated" + resultSet.rowUpdated());
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return result;
     }
 
-    public Boolean execUpdate(String queryUpdate) throws SQLException {
+    public Boolean execUpdate(String queryUpdate) {
         Boolean execute = null;
 //        Statement stmt = connection.createStatement();
         try (Statement stmt = connection.createStatement()) {
             execute = stmt.execute(queryUpdate) ? RESULTING_RESULT_SET : RESULTING_COUNT_NO_RESULT_SET;
             LOGGER.info(queryUpdate + "\nreturn " + (execute ? "RESULTING_RESULT_SET" : "RESULTING_COUNT_NO_RESULT_SET"));
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 //        stmt.close();
         return execute;

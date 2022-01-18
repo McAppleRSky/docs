@@ -20,11 +20,13 @@ import ru.mrs.base.service.account.AccountService;
 import ru.mrs.base.service.file.ObjectWriter;
 import ru.mrs.docs.frontend.GreetingServlet;
 import ru.mrs.docs.frontend.LoginServlet;
-import ru.mrs.docs.frontend.OldTableServlet;
+import ru.mrs.docs.frontend.MainServlet;
 import ru.mrs.docs.service.account.AccountServiceImpl;
 import ru.mrs.docs.service.account.UserProfile;
 import ru.mrs.docs.service.db.DBService;
 import ru.mrs.docs.service.db.DBServiceImpl;
+import ru.mrs.docs.service.db.MainService;
+import ru.mrs.docs.service.db.MainServiceImpl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,12 +50,19 @@ public class Main extends MainConfiguration {
                         context.get(PropertyKeys.DEFAULT_USER),
                         context.get(PropertyKeys.DEFAULT_PROF) ) );
         context.put(freemarker.template.Configuration.class, configureFreemarker());
-        context.put(
+        /*context.put(
                 DBService.class, configureDBService(
                         context.get(PropertyKeys.DB_USR_NAME),
                         context.get(PropertyKeys.DB_USR_PASSWORD),
                         context.get(PropertyKeys.DB_DATA_PATH)
-                        ) );
+                        ) );*/
+        context.put(
+                MainService.class, configureMainDBService(
+                        context.get(PropertyKeys.DB_USR_NAME),
+                        context.get(PropertyKeys.DB_USR_PASSWORD),
+                        context.get(PropertyKeys.DB_DATA_PATH)
+                ) );
+
 //        context.put( AccountService.class, configureAccountService( (AccountService)context.get(AccountServiceImpl.class) ) );
     }
 
@@ -68,7 +77,7 @@ public class Main extends MainConfiguration {
 //        servletContextHandler.addServlet(new ServletHolder( new WebSocketChatServlet() ), WebSocketChatServlet.PATH);
 
 //        servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.URL);
-        servletContextHandler.addServlet( new ServletHolder( new OldTableServlet() ), OldTableServlet.PATH_SPEC);
+        servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.PATH_SPEC);
         servletContextHandler.addServlet( new ServletHolder( new LoginServlet() ), LoginServlet.PATH_SPEC);
         servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.PATH_SPEC);
         ResourceHandler resource_handler = new ResourceHandler();
@@ -211,8 +220,11 @@ class MainConfiguration {
         return new AccountServiceImpl(defaultLogin.toString(), userProfile);
     }
 
-    protected static DBService configureDBService(Object name, Object pass, Object path) {
+    /*protected static DBService configureDBService(Object name, Object pass, Object path) {
         return new DBServiceImpl(name.toString(), pass.toString(), path.toString());
+    }*/
+    protected static MainService configureMainDBService(Object name, Object pass, Object path) {
+        return new MainServiceImpl(name.toString(), pass.toString(), path.toString());
     }
 
 }
