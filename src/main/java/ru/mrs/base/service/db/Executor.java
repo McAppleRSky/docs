@@ -14,61 +14,37 @@ public class Executor {
 
     private final Connection connection;
 
+    private final boolean RESULTING_COUNT_NO_RESULT_SET = false,
+            RESULTING_RESULT_SET = true;
+
     public Executor(Connection connection) {
         this.connection = connection;
     }
 
     public <T> T execQuery(String query, ResultHandler<T> handler) throws SQLException {
         T result = null;
+        Boolean execute = null;
         try (Statement stmt = connection.createStatement()) {
-            boolean execute = stmt.execute(query);
-            LOGGER.info(query + "\nreturn " + execute);
+            execute = stmt.execute(query) ? RESULTING_RESULT_SET : RESULTING_COUNT_NO_RESULT_SET;
+            LOGGER.info(query + "\nreturn " + (execute ? "RESULTING_RESULT_SET" : "RESULTING_COUNT_NO_RESULT_SET"));
             try (ResultSet resultSet = stmt.getResultSet()) {
                 result = handler.handle(resultSet);
-//                ResultSetMetaData metaData = resultSet.getMetaData();
+                ResultSetMetaData metaData = resultSet.getMetaData();
                 LOGGER.info("Deleted " + resultSet.rowDeleted() + ", inserted " + resultSet.rowInserted() + "updated" + resultSet.rowUpdated());
             }
         }
         return result;
     }
 
-    public void execUpdate(String update) throws SQLException {
-        Statement stmt = connection.createStatement();
-        stmt.execute(update);
-        stmt.close();
-    }
-
-    public void execCreateDocsOldTables(Map<String, String> paramToValue) {
-        String columns = new StringBuilder(OldTableColumns.URL_SED_INPUT.toString())
-                .append(", ")
-                .append(OldTableColumns.FROM_OWNER)
-                .append(", ")
-                .append(OldTableColumns.WORKER)
-                .append(", ")
-                .append(OldTableColumns.URL_SED_OUTPUT).toString();
-        String create = "insert into OLD_MAIN_TABLE ("+columns+") VALUES (?, ?, ?, ?);";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(create)) {
-            for (String param : paramToValue.keySet()) {
-                /*preparedStatement.setString(1, id);
-                preparedStatement.setString(2, idToName.get(id));*/
-                preparedStatement.executeUpdate(create);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public Boolean execUpdate(String queryUpdate) throws SQLException {
+        Boolean execute = null;
+//        Statement stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement()) {
+            execute = stmt.execute(queryUpdate) ? RESULTING_RESULT_SET : RESULTING_COUNT_NO_RESULT_SET;
+            LOGGER.info(queryUpdate + "\nreturn " + (execute ? "RESULTING_RESULT_SET" : "RESULTING_COUNT_NO_RESULT_SET"));
         }
-    }
-
-    public void execUpdate(Map<Integer, String> idToName) {
-        String update = "insert into ...?, ?";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(update)) {
-            for (Integer id : idToName.keySet()) {
-                preparedStatement.setInt(1, id);
-                preparedStatement.setString(2, idToName.get(id));
-                preparedStatement.executeUpdate(update);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        stmt.close();
+        return execute;
     }
 
 }
