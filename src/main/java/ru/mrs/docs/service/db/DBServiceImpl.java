@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import ru.mrs.docs.service.db.dao.OldTableDAOImpl;
-import ru.mrs.docs.service.db.dataSet.OldTableColumns;
-import ru.mrs.docs.service.db.dataSet.OldTableDataSet;
+import ru.mrs.docs.service.db.entity.OldTableColumns;
+import ru.mrs.docs.service.db.entity.OldTableDataSet;
 
 public class DBServiceImpl implements DBService {
 

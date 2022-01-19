@@ -1,8 +1,8 @@
 package ru.mrs.docs.service.db.dao;
 
 import ru.mrs.base.service.db.Executor;
-import ru.mrs.docs.service.db.dataSet.OldTableDataSet;
-import ru.mrs.docs.service.db.dataSet.OldTableColumns;
+import ru.mrs.docs.service.db.entity.OldTableDataSet;
+import ru.mrs.docs.service.db.entity.OldTableColumns;
 
 import java.sql.Connection;
 import java.sql.SQLException;

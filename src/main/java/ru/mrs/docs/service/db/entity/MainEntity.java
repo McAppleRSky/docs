@@ -1,4 +1,4 @@
-package ru.mrs.docs.service.db.dataSet;
+package ru.mrs.docs.service.db.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.sql.Date;
 @Accessors(chain = true)
 public class MainEntity {
 
-    private Integer
+    private Long
             id;
     private String
             urlInput;

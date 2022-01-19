@@ -2,9 +2,7 @@ package ru.mrs.docs.service.db;
 
 import org.apache.commons.lang3.NotImplementedException;
 import ru.mrs.docs.service.db.dao.MainDao;
-import ru.mrs.docs.service.db.dao.OldTableDAOImpl;
-import ru.mrs.docs.service.db.dataSet.MainEntity;
-import ru.mrs.docs.service.db.dataSet.OldTableDataSet;
+import ru.mrs.docs.service.db.entity.MainEntity;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,7 +22,7 @@ public class MainServiceImpl implements MainService{
     }
 
     @Override
-    public List<MainEntity> findAll() {
+    public List<MainEntity> getAll() {
         List<MainEntity> entities = null;
         try(Connection connection = DriverManager.getConnection(url, name, pass)){
             MainDao dao = new MainDao(connection);
@@ -42,22 +40,18 @@ public class MainServiceImpl implements MainService{
     }
 
     @Override
-    public long create(MainEntity entity) {
+    public void add(MainEntity entity) {
         throw new NotImplementedException("long create(MainEntity entity) need impl");
     }
 
     @Override
-    public MainEntity update(long id, MainEntity entity) {
+    public void update(MainEntity entity) {
         throw new NotImplementedException("MainEntity update(long id, MainEntity entity) need impl");
     }
 
     @Override
-    public void delete(long id) {
+    public void remove(long id) {
         throw new NotImplementedException("void delete(long id) need impl");
     }
 
-    @Override
-    public void close(long id) {
-        throw new NotImplementedException("void close(long id) need impl");
-    }
 }

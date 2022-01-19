@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.mrs.base.service.db.Executor;
 import ru.mrs.docs.PropertyKeys;
-import ru.mrs.docs.service.db.dataSet.MainColumns;
-import ru.mrs.docs.service.db.dataSet.OldTableColumns;
+import ru.mrs.docs.service.db.entity.MainColumns;
+import ru.mrs.docs.service.db.entity.OldTableColumns;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

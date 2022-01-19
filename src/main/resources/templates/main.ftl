@@ -1,65 +1,179 @@
 <#import "parts/common.ftl" as c>
-  <!--  <#import "parts/login.ftl" as l>-->
-
   <@c.page>
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <form class="form-inline" method="get" action="/main">
-          <input class="form-control" type="text" name="filter" value="${filter?ifExists}" placeholder="Search by tag">
-          <!-- <input type="hidden" name="_csrf" value="${_csrf.token}" /> -->
-          <button class="btn btn-primary ml-2" type="submit">search</button>
+    <div id="oldTableContainer">
+      <div class="oldTableSection">
+        <label onclick="createForm()" style="outline: 2px solid #000;">(+) Add docs on this list</label>
+      </div>
+      <div class="oldTableSection">
+        <table id="oldTable" style="text-align: center;">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>URL_INPUT</th>
+              <th>G_NUMB</th>
+              <th>G_DATE</th>
+              <th>OUT_NUMB</th>
+              <th>OUT_DATE</th>
+              <th>OWNER</th>
+              <th>IN_DATE</th>
+              <th>IN_NUMB</th>
+              <th>WORKER</th>
+              <th>HAND_PASS</th>
+              <th>COMPLETE</th>
+              <th>COMPLETE_DATE</th>
+              <th>COMPLETE_NUMB</th>
+              <th>URL_OUTPUT</th>
+              <th>NOTE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <#list old_docs_tables as docs>
+              <tr>
+                <td>${(docs.id)!"-"}</td>
+                <td nowrap>${(docs.urlIn)!"-"}</td>
+                <td>${(docs.genOrgNumb)!"-"}</td>
+                <td>${(docs.genOrgDate)!"-"}</td>
+                <td>${(docs.outputNumb)!"-"}</td>
+                <td>${(docs.outputDate)!"-"}</td>
+                <td nowrap>${(docs.fromOwner)!"-"}</td>
+                <td>${(docs.inputDate)!"-"}</td>
+                <td>${(docs.inputNumb)!"-"}</td>
+                <td>${(docs.worker)!"-"}</td>
+                <td>${(docs.handPass)!"-"}</td>
+                <td>${(docs.answerComp)!"-"}</td>
+                <td>${(docs.answerDate)!"-"}</td>
+                <td>${(docs.answerNumb)!"-"}</td>
+                <td nowrap>${(docs.urlOut)!"-"}</td>
+                <td>${(docs.note)!"-"}</td>
+              </tr>
+              <#else>No message
+            </#list>
+          </tbody>
+        </table>
+      </div>
+      <div class="oldTableSection">
+      </div>
+      <div id="formDiv" class="hidden" style="left: 65px; top: 54px; visibility: visible; position: absolute; overflow: visible; background: #fff;">
+        <label onclick="updateForm()" style="outline: 2px solid #000;">(-) close</label>
+        <form action="/main" method="post">
+          <table id="oldTableDocs">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th nowrap>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><label for="id">ID</label></td>
+                <td><input type="text" class="values" id="id" name="ID"></td>
+              </tr>
+              <tr>
+                <td><label for="urlInput">URL_INPUT</label></td>
+                <td><input type="text" class="values" id="urlInput" name="URL_SED_INPUT"></td>
+              </tr>
+              <tr>
+                <td><label for="gNumb">G_NUMB</label></td>
+                <td><input type="text" class="values" id="gNumb" name="GENERAL_ORG_NUMB"></td>
+              </tr>
+              <tr>
+                <td><label for="gDate">G_DATE</label></td>
+                <td><input type="text" class="values" id="gDate" name="GENERAL_ORG_DATE"></td>
+              </tr>
+              <tr>
+                <td><label for="outNumb">OUT_NUMB</label></td>
+                <td><input type="text" class="values" id="outNumb" name="OUTPUT_NUMB"></td>
+              </tr>
+              <tr>
+                <td><label for="outDate">OUT_DATE</label></td>
+                <td><input type="text" class="values" id="outDate" name="OUTPUT_DATE"></td>
+              </tr>
+              <tr>
+                <td><label for="owner">OWNER</label></td>
+                <td><input type="text" class="values" id="owner" name="FROM_OWNER"></td>
+              </tr>
+              <tr>
+                <td><label for="inDate">IN_DATE</label></td>
+                <td><input type="text" class="values" id="inDate" name="INPUT_DATE"></td>
+              </tr>
+              <tr>
+                <td><label for="inNumb">IN_NUMB</label></td>
+                <td><input type="text" class="values" id="inNumb" name="INPUT_NUMB"></td>
+              </tr>
+              <tr>
+                <td><label for="worker">WORKER</label></td>
+                <td><input type="text" class="values" id="worker" name="WORKER"></td>
+              </tr>
+              <tr>
+                <td><label for="handPass">HAND_PASS</label></td>
+                <td><input type="text" class="values" id="handPass" name="HAND_PASS"></td>
+              </tr>
+              <tr>
+                <td><label for="complete">COMPLETE</label></td>
+                <td><input type="text" class="values" id="complete" name="ANSWER_COMPLETE"></td>
+              </tr>
+              <tr>
+                <td><label for="completeDate">COMPLETE_DATE</label></td>
+                <td><input type="text" class="values" id="completeDate" name="ANSWER_DATE"></td>
+              </tr>
+              <tr>
+                <td><label for="completeNumb">COMPLETE_NUMB</label></td>
+                <td><input type="text" class="values" id="completeNumb" name="ANSWER_NUMB"></td>
+              </tr>
+              <tr>
+                <td><label for="urlOutput">URL_OUTPUT</label></td>
+                <td><input type="text" class="values" id="urlOutput" name="URL_SED_OUTPUT"></td>
+              </tr>
+              <tr>
+                <td><label for="note">NOTE</label></td>
+                <td><input type="text" class="values" id="note" name="NOTE"></td>
+              </tr>
+            </tbody>
+          </table>
+          <input type="submit" value="Enter">
         </form>
       </div>
+
     </div>
-    <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-      Add new message
-    </a>
-    <div class="collapse" id="collapseExample">
-      <div class="form-group mt-3">
-        <form method="post" enctype="multipart/form-data">
-          <div class="form-group">
-            <input class="form-control ${(textError??)?string('is-invalid','')}" value="<#if message??>${message.text}</#if>" type="text" name="text" placeholder="Input message">
-            <#if textError??>
-              <div class="invalid-feedback">
-                ${textError}
-              </div>
-            </#if>
-          </div>
-          <div class="form-group">
-            <input class="form-control" type="text" name="tag" placeholder="Input tag">
-          </div>
-          <div class="form-group">
-            <div class="custom-file">
-              <input type="file" name="file" id="customFile">
-              <label class="custom-file-label" for="customFile">Choose file</label>
-            </div>
-          </div>
-          <input class="form-control" type="hidden" name="_csrf" value="${_csrf.token}" />
-          <div class="form-group">
-            <button class="btn btn-primary ml-2">Add</button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <div class="card-columns">
-      <#list messages as message>
-        <div class="card my-3">
-          <!--          <b>${message.id}</b>-->
-          <div class="m-2">
-            <span>${message.text}</span>
-            <i>${message.tag}</i>
-          </div>
-          <div class="card-footer text-muted">
-            ${message.authorName}
-          </div>
-          <div>
-            <#if message.filename??>
-              <img class="card-img-top" src="/img/${message.filename}">
-            </#if>
-          </div>
-        </div>
-      <#else>
-          No message
-      </#list>
-    </div>
+    <script>
+      var oldTable = document.getElementById("oldTable");
+      var formDiv = document.getElementById('formDiv');
+      var inputValues = document.querySelectorAll('.values');
+
+      function ready() {
+        var rows = oldTable.getElementsByTagName("tr");
+        for (let i = 0; i < rows.length; i++) {
+          var currentRow = oldTable.rows[i];
+          var createClickHandler = function(row) {
+            return function() {
+              var cell = row.getElementsByTagName("td")[0];
+              var id = cell.innerHTML;
+              var cells = row.getElementsByTagName("td");
+              for (let i = 0; i < cells.length; i++) {
+                // alert(cells[i].innerText);
+                inputValues[i].value = cells[i].innerText == '-' ? '' : cells[i].innerText;
+              }
+              inputValues[0].disabled = false;
+              formDiv.setAttribute('class', 'visible');
+            };
+          };
+
+          currentRow.onclick = createClickHandler(currentRow);
+        }
+      }
+
+      function updateForm() {
+        formDiv.setAttribute('class', 'hidden');
+        for (let i = 0; i < inputValues.length; i++) {
+          inputValues[i].value = '';
+        }
+      }
+
+      function createForm() {
+        formDiv.setAttribute('class', 'visible');
+        inputValues[0].disabled = true;
+      }
+
+      document.addEventListener("DOMContentLoaded", ready);
+    </script>
   </@c.page>

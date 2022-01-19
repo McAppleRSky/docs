@@ -7,12 +7,10 @@ import org.apache.logging.log4j.Logger;
 import ru.mrs.base.service.account.AccountService;
 import ru.mrs.docs.Main;
 import ru.mrs.docs.service.account.UserProfile;
-import ru.mrs.docs.service.db.DBService;
 import ru.mrs.docs.service.db.MainService;
-import ru.mrs.docs.service.db.dataSet.MainColumns;
-import ru.mrs.docs.service.db.dataSet.MainEntity;
-import ru.mrs.docs.service.db.dataSet.OldTableColumns;
-import ru.mrs.docs.service.db.dataSet.OldTableDataSet;
+import ru.mrs.docs.service.db.entity.MainColumns;
+import ru.mrs.docs.service.db.entity.MainEntity;
+import ru.mrs.docs.service.db.entity.MainHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,15 +38,15 @@ public class MainServlet extends HttpServlet implements Servletable {
         UserProfile userProfile = (UserProfile) accountService.getUserBySessionId(request.getSession().getId());
         if (userProfile != null) {
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC + " method Get");
-            List<MainEntity> entities = mainService.findAll();
-            entities.sort((a, b) -> b.getId() - a.getId());
+            List<MainEntity> entities = mainService.getAll();
+            entities.sort((a, b) -> (int) (b.getId() - a.getId()));
             Map<String, Object> data = new HashMap<>();
             data.put("main_entities", entities);
             freemarker.template.Configuration freemarkerConfiguration =
                     (freemarker.template.Configuration) Main.context.get(
                             freemarker.template.Configuration.class);
             try (PrintWriter writer = response.getWriter()) {
-                Template template = freemarkerConfiguration.getTemplate("main.ftl");
+                Template template = freemarkerConfiguration.getTemplate("_main.ftl");
                 response.setContentType(COMMON_CONTENT_TYPE);
                 response.setStatus(HttpServletResponse.SC_OK);
                 template.process(data, writer);
@@ -66,52 +64,28 @@ public class MainServlet extends HttpServlet implements Servletable {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(COMMON_CONTENT_TYPE);
         UserProfile userProfile = (UserProfile) accountService.getUserBySessionId(request.getSession().getId());
-        Map<MainColumns, String> columnToValues;
         if (userProfile != null) {
-            columnToValues = new HashMap<>();
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC + " method Post");
-            for (MainColumns columns : MainColumns.values()) {
-                columnToValues.put(columns, request.getParameter(columns.toString()));
-            }
-            PostVars postVar = columnToValues.get(MainColumns.ID)==null ? PostVars.CREATE : PostVars.UPDATE;
-            switch (postVar) {
+            MainEntity entity = MainHelper.toEntity(mapByColumns(request));
+            /*Map<MainColumns, String> mainColumnToValues = Helper.fetchByEnum(request);
+            PostVars postVar = mainColumnToValues.get(MainColumns.ID)==null ? PostVars.CREATE : PostVars.UPDATE;*/
+            StoreMethod storeMethod = entity.getId() == null ? StoreMethod.CREATE : StoreMethod.UPDATE;
+            switch (storeMethod) {
                 case CREATE:
-                    int created = mainService.create(columnToValues);
-                    LOGGER.info(PATH_SPEC + " created " + created);
+                    mainService.add(entity);
+                    LOGGER.warn(PATH_SPEC + " created");
                     response.setStatus(HttpServletResponse.SC_OK);
                     response.sendRedirect(PATH_SPEC);
                     break;
                 case UPDATE:
-                    int opened = mainService.update(columnToValues);
-                    LOGGER.warn(PATH_SPEC + " opened " + opened);
+                    mainService.update(entity);
+                    LOGGER.warn(PATH_SPEC + " updated");
                     response.setStatus(HttpServletResponse.SC_OK);
                     response.sendRedirect(PATH_SPEC);
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected value: " + postVar);
+                    throw new IllegalStateException("Unexpected value: " + storeMethod);
             }
-
-            /*List<MainEntity> entities = mainService.findAll();
-*//*
-            oldTableDataSets.sort((a, b) -> {
-                return a.getId() - b.getId();
-            });
-*//*
-            Map<String, Object> data = new HashMap<>();
-            data.put("old_docs_tables", oldTableDataSets);
-            freemarker.template.Configuration freemarkerConfiguration =
-                    (freemarker.template.Configuration) Main.context.get(
-                            freemarker.template.Configuration.class);
-
-            Template template = null;
-            try (PrintWriter writer = response.getWriter()) {
-                template = freemarkerConfiguration.getTemplate("oldtable.ftl");
-                response.setContentType(COMMON_CONTENT_TYPE);
-                response.setStatus(HttpServletResponse.SC_OK);
-                template.process(data, writer);
-            } catch (TemplateException e) {
-                e.printStackTrace();
-            }*/
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.sendRedirect(REDIR_ROOT);
@@ -119,8 +93,16 @@ public class MainServlet extends HttpServlet implements Servletable {
         }
     }
 
+    public Map<MainColumns, String> mapByColumns (HttpServletRequest request) {
+        Map<MainColumns, String> result = new HashMap<>();
+        for (MainColumns columns : MainColumns.values()) {
+            result.put(columns, request.getParameter(columns.toString()));
+        }
+        return result;
+    }
+
 }
 
-enum PostVars {
+enum StoreMethod {
     CREATE, UPDATE
 }

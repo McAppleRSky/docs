@@ -1,4 +1,4 @@
-package ru.mrs.docs.service.db.dataSet;
+package ru.mrs.docs.service.db.entity;
 
 public enum OldTableColumns {
     ID(

@@ -1,6 +1,7 @@
-package ru.mrs.docs.service.db.dataSet;
+package ru.mrs.docs.service.db.entity;
 
 public enum MainColumns {
+
     ID(
             "id" ),
     URL_INPUT(

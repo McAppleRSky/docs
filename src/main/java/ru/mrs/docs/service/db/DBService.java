@@ -1,7 +1,7 @@
 package ru.mrs.docs.service.db;
 
-import ru.mrs.docs.service.db.dataSet.OldTableColumns;
-import ru.mrs.docs.service.db.dataSet.OldTableDataSet;
+import ru.mrs.docs.service.db.entity.OldTableColumns;
+import ru.mrs.docs.service.db.entity.OldTableDataSet;
 
 import java.util.List;
 import java.util.Map;

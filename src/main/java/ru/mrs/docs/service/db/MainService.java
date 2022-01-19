@@ -1,21 +1,19 @@
 package ru.mrs.docs.service.db;
 
-import ru.mrs.docs.service.db.dataSet.MainEntity;
+import ru.mrs.docs.service.db.entity.MainEntity;
 
 import java.util.List;
 
 public interface MainService {
 
-    List<MainEntity> findAll();
+    List<MainEntity> getAll();
 
     MainEntity getById(long id);
 
-    long create(MainEntity entity);
+    void add(MainEntity entity);
 
-    MainEntity update(long id, MainEntity entity);
+    void update(MainEntity entity);
 
-    void delete(long id);
-
-    void close(long id);
+    void remove(long id);
 
 }
