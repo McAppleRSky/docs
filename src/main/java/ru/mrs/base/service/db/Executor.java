@@ -18,7 +18,7 @@ public class Executor {
         this.connection = connection;
     }
 
-    public <T> T execQuery(String query, ResultHandler<T> handler) {
+    public <T> T execFetch(String query, ResultHandler<T> handler) {
         T result = null;
         Boolean execute = null;
         try (Statement stmt = connection.createStatement()) {
@@ -35,7 +35,7 @@ public class Executor {
         return result;
     }
 
-    public Boolean execUpdate(String queryUpdate) {
+    public Boolean execChange(String queryUpdate) {
         Boolean execute = null;
 //        Statement stmt = connection.createStatement();
         try (Statement stmt = connection.createStatement()) {

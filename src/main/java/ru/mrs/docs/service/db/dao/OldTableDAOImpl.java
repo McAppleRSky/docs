@@ -20,7 +20,7 @@ public class OldTableDAOImpl implements OldTableDAO {
 
     @Override
     public List<OldTableDataSet> getOldTableList() throws SQLException {
-        return executor.execQuery("SELECT * FROM OLD_MAIN_TABLE;", resultSet -> {
+        return executor.execFetch("SELECT * FROM OLD_MAIN_TABLE;", resultSet -> {
             List<OldTableDataSet> oldTableList = new LinkedList<>();
             while (resultSet.next()){
                 oldTableList.add(
@@ -58,7 +58,7 @@ public class OldTableDAOImpl implements OldTableDAO {
                 parameterMap.get(OldTableColumns.FROM_OWNER),
                 parameterMap.get(OldTableColumns.WORKER),
                 parameterMap.get(OldTableColumns.URL_SED_OUTPUT) );
-        return executor.execQuery(query, resultSet -> {
+        return executor.execFetch(query, resultSet -> {
             Integer result = 0;
             System.out.println(resultSet);
             return result;

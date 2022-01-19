@@ -1,6 +1,8 @@
 package ru.mrs.docs.service.db;
 
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.mrs.docs.service.db.dao.MainDao;
 import ru.mrs.docs.service.db.entity.MainEntity;
 
@@ -11,6 +13,8 @@ import java.util.List;
 
 public class MainServiceImpl implements MainService {
 
+    private static final Logger LOGGER = LogManager.getLogger(MainDao.class);
+
     private final String url;
     private final String name;
     private final String pass;
@@ -19,6 +23,7 @@ public class MainServiceImpl implements MainService {
         this.url = "jdbc:h2:" + path;
         this.name = name;
         this.pass = pass;
+        LOGGER.info(url + " " + this.name + " " + this.pass + " ");
     }
 
     @Override

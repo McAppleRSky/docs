@@ -1,7 +1,6 @@
 package ru.mrs.docs.service.db.dao;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import ru.mrs.base.service.db.Executor;
 import ru.mrs.docs.PropertyKeys;
 import ru.mrs.docs.service.db.entity.MainColumns;
@@ -108,7 +107,7 @@ public class MainTableBehaviour {
                 .replace("\t", "");
         try(Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPass)) {
             Executor executor = new Executor(connection);
-            executor.execUpdate(queryCreate);
+            executor.execChange(queryCreate);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -152,7 +151,7 @@ public class MainTableBehaviour {
                 .replace("\t", "");
         try(Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPass)) {
             Executor executor = new Executor(connection);
-            executor.execUpdate(queryInsert);
+            executor.execChange(queryInsert);
         } catch (SQLException e) {
             e.printStackTrace();
         }
