@@ -11,7 +11,7 @@
         <a class="nav-link" href="/greeting">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/oldtable">Old table</a>
+        <a class="nav-link" href="/main">Main</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/login?unauthorise">Unauthorise</a>

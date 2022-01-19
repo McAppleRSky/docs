@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
-public class MainServiceImpl implements MainService{
+public class MainServiceImpl implements MainService {
 
     private final String url;
     private final String name;
@@ -24,7 +24,7 @@ public class MainServiceImpl implements MainService{
     @Override
     public List<MainEntity> getAll() {
         List<MainEntity> entities = null;
-        try(Connection connection = DriverManager.getConnection(url, name, pass)){
+        try(Connection connection = DriverManager.getConnection(url, name, pass)) {
             MainDao dao = new MainDao(connection);
             entities = dao.findAll();
         } catch (SQLException throwables) {
@@ -41,12 +41,26 @@ public class MainServiceImpl implements MainService{
 
     @Override
     public void add(MainEntity entity) {
-        throw new NotImplementedException("long create(MainEntity entity) need impl");
+        Boolean queryResult = null;
+        try(Connection connection = DriverManager.getConnection(url, name, pass)) {
+            MainDao dao = new MainDao(connection);
+            queryResult = dao.saveNew(entity);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        throw new NotImplementedException("long create(MainEntity entity) need impl");
     }
 
     @Override
     public void update(MainEntity entity) {
-        throw new NotImplementedException("MainEntity update(long id, MainEntity entity) need impl");
+        Boolean queryResult = null;
+        try(Connection connection = DriverManager.getConnection(url, name, pass)) {
+            MainDao dao = new MainDao(connection);
+            queryResult = dao.merge(entity);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        throw new NotImplementedException("MainEntity update(long id, MainEntity entity) need impl");
     }
 
     @Override

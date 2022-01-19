@@ -23,19 +23,15 @@ import ru.mrs.docs.frontend.LoginServlet;
 import ru.mrs.docs.frontend.MainServlet;
 import ru.mrs.docs.service.account.AccountServiceImpl;
 import ru.mrs.docs.service.account.UserProfile;
-import ru.mrs.docs.service.db.DBService;
-import ru.mrs.docs.service.db.DBServiceImpl;
 import ru.mrs.docs.service.db.MainService;
 import ru.mrs.docs.service.db.MainServiceImpl;
+import ru.mrs.docs.service.db.entity.MainColumns;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class Main extends MainConfiguration {
@@ -57,13 +53,12 @@ public class Main extends MainConfiguration {
                         context.get(PropertyKeys.DB_DATA_PATH)
                         ) );*/
         context.put(
-                MainService.class, configureMainDBService(
+                MainService.class, configureMainService(
                         context.get(PropertyKeys.DB_USR_NAME),
                         context.get(PropertyKeys.DB_USR_PASSWORD),
                         context.get(PropertyKeys.DB_DATA_PATH)
                 ) );
-
-//        context.put( AccountService.class, configureAccountService( (AccountService)context.get(AccountServiceImpl.class) ) );
+        context.put(MainColumns.class, beautifyMainColumns());
     }
 
     public static void main(String[] args) throws Exception {
@@ -76,10 +71,9 @@ public class Main extends MainConfiguration {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
 //        servletContextHandler.addServlet(new ServletHolder( new WebSocketChatServlet() ), WebSocketChatServlet.PATH);
 
-//        servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.URL);
-        servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.PATH_SPEC);
-        servletContextHandler.addServlet( new ServletHolder( new LoginServlet() ), LoginServlet.PATH_SPEC);
-        servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.PATH_SPEC);
+        servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.PATH_SPEC );
+        servletContextHandler.addServlet( new ServletHolder( new LoginServlet() ), LoginServlet.PATH_SPEC );
+        servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.PATH_SPEC );
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
         resource_handler.setResourceBase( context.get(PropertyKeys.RESOURCE_BASE).toString() );
@@ -208,7 +202,7 @@ class MainConfiguration {
                                     MainConfiguration.class
                                             .getClassLoader()
                                             .getResource("templates")
-                                            .getPath()));
+                                            .getPath() ) );
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -223,8 +217,28 @@ class MainConfiguration {
     /*protected static DBService configureDBService(Object name, Object pass, Object path) {
         return new DBServiceImpl(name.toString(), pass.toString(), path.toString());
     }*/
-    protected static MainService configureMainDBService(Object name, Object pass, Object path) {
+    protected static MainService configureMainService(Object name, Object pass, Object path) {
         return new MainServiceImpl(name.toString(), pass.toString(), path.toString());
+    }
+    protected static Collection<String> beautifyMainColumns() {
+        Map<MainColumns, String> result = new LinkedHashMap<>();
+        result.put(MainColumns.ID, "Iden.");
+        result.put(MainColumns.URL_INPUT, "External URL on received document");
+        result.put(MainColumns.GEN_ORG_NUMB, "G.O.N.");
+        result.put(MainColumns.GEN_ORG_DATE, "G.O.D.");
+        result.put(MainColumns.OUTPUT_NUMB, "O.N.");
+        result.put(MainColumns.OUTPUT_DATE, "O.D.");
+        result.put(MainColumns.FROM_OWNER, "Owner of document");
+        result.put(MainColumns.INPUT_DATE, "I.D.");
+        result.put(MainColumns.INPUT_NUMB, "I.N.");
+        result.put(MainColumns.WORKER, "Worker took over");
+        result.put(MainColumns.HAND_PASS, "H.P.");
+        result.put(MainColumns.ANSWER_COMP, "A.C.");
+        result.put(MainColumns.ANSWER_DATE, "A.D.");
+        result.put(MainColumns.ANSWER_NUMB, "A.N.");
+        result.put(MainColumns.URL_OUTPUT, "External URL on sending document");
+        result.put(MainColumns.NOTE, "Note");
+        return result.values();
     }
 
 }

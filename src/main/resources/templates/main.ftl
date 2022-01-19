@@ -1,62 +1,62 @@
 <#import "parts/common.ftl" as c>
   <@c.page>
-    <div id="oldTableContainer">
-      <div class="oldTableSection">
+    <div id="mainContainer">
+      <div class="mainSection">
         <label onclick="createForm()" style="outline: 2px solid #000;">(+) Add docs on this list</label>
       </div>
-      <div class="oldTableSection">
-        <table id="oldTable" style="text-align: center;">
+      <div class="mainSection">
+        <table id="mainTable" style="text-align: center;">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>URL_INPUT</th>
-              <th>G_NUMB</th>
-              <th>G_DATE</th>
-              <th>OUT_NUMB</th>
-              <th>OUT_DATE</th>
-              <th>OWNER</th>
-              <th>IN_DATE</th>
-              <th>IN_NUMB</th>
-              <th>WORKER</th>
-              <th>HAND_PASS</th>
-              <th>COMPLETE</th>
-              <th>COMPLETE_DATE</th>
-              <th>COMPLETE_NUMB</th>
-              <th>URL_OUTPUT</th>
-              <th>NOTE</th>
+              <th>${col_beautify[0]}</th>
+              <th nowrap>${col_beautify[1]}</th>
+              <th>${col_beautify[2]}</th>
+              <th>${col_beautify[3]}</th>
+              <th>${col_beautify[4]}</th>
+              <th>${col_beautify[5]}</th>
+              <th>${col_beautify[6]}</th>
+              <th>${col_beautify[7]}</th>
+              <th>${col_beautify[8]}</th>
+              <th nowrap>${col_beautify[9]}</th>
+              <th>${col_beautify[10]}</th>
+              <th>${col_beautify[11]}</th>
+              <th>${col_beautify[12]}</th>
+              <th>${col_beautify[13]}</th>
+              <th nowrap>${col_beautify[14]}</th>
+              <th>${col_beautify[15]}</th>
             </tr>
           </thead>
           <tbody>
-            <#list old_docs_tables as docs>
+            <#list main_values as values>
               <tr>
-                <td>${(docs.id)!"-"}</td>
-                <td nowrap>${(docs.urlIn)!"-"}</td>
-                <td>${(docs.genOrgNumb)!"-"}</td>
-                <td>${(docs.genOrgDate)!"-"}</td>
-                <td>${(docs.outputNumb)!"-"}</td>
-                <td>${(docs.outputDate)!"-"}</td>
-                <td nowrap>${(docs.fromOwner)!"-"}</td>
-                <td>${(docs.inputDate)!"-"}</td>
-                <td>${(docs.inputNumb)!"-"}</td>
-                <td>${(docs.worker)!"-"}</td>
-                <td>${(docs.handPass)!"-"}</td>
-                <td>${(docs.answerComp)!"-"}</td>
-                <td>${(docs.answerDate)!"-"}</td>
-                <td>${(docs.answerNumb)!"-"}</td>
-                <td nowrap>${(docs.urlOut)!"-"}</td>
-                <td>${(docs.note)!"-"}</td>
+                <td>${(values.id)!"-"}</td>
+                <td nowrap>${(values.urlInput)!"-"}</td>
+                <td>${(values.genOrgNumb)!"-"}</td>
+                <td>${(values.genOrgDate)!"-"}</td>
+                <td>${(values.outputNumb)!"-"}</td>
+                <td>${(values.outputDate)!"-"}</td>
+                <td nowrap>${(values.fromOwner)!"-"}</td>
+                <td>${(values.inputDate)!"-"}</td>
+                <td>${(values.inputNumb)!"-"}</td>
+                <td>${(values.worker)!"-"}</td>
+                <td>${(values.handPass)!"-"}</td>
+                <td>${(values.answerComp)!"-"}</td>
+                <td>${(values.answerDate)!"-"}</td>
+                <td>${(values.answerNumb)!"-"}</td>
+                <td nowrap>${(values.urlOutput)!"-"}</td>
+                <td>${(values.note)!"-"}</td>
               </tr>
               <#else>No message
             </#list>
           </tbody>
         </table>
       </div>
-      <div class="oldTableSection">
+      <div class="mainSection">
       </div>
       <div id="formDiv" class="hidden" style="left: 65px; top: 54px; visibility: visible; position: absolute; overflow: visible; background: #fff;">
         <label onclick="updateForm()" style="outline: 2px solid #000;">(-) close</label>
         <form action="/main" method="post">
-          <table id="oldTableDocs">
+          <table>
             <thead>
               <tr>
                 <th>Field</th>
@@ -65,68 +65,68 @@
             </thead>
             <tbody>
               <tr>
-                <td><label for="id">ID</label></td>
-                <td><input type="text" class="values" id="id" name="ID"></td>
+                <td><label for="${col_texts[0]}">${col_beautify[0]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[0]}" name="${col_names[0]}"></td>
               </tr>
               <tr>
-                <td><label for="urlInput">URL_INPUT</label></td>
-                <td><input type="text" class="values" id="urlInput" name="URL_SED_INPUT"></td>
+                <td><label for="${col_texts[1]}">Inp.URL</label></td>
+                <td><input type="text" class="values" id="${col_texts[1]}" name="${col_names[1]}"></td>
               </tr>
               <tr>
-                <td><label for="gNumb">G_NUMB</label></td>
-                <td><input type="text" class="values" id="gNumb" name="GENERAL_ORG_NUMB"></td>
+                <td><label for="${col_texts[2]}">${col_beautify[2]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[2]}" name="${col_names[2]}"></td>
               </tr>
               <tr>
-                <td><label for="gDate">G_DATE</label></td>
-                <td><input type="text" class="values" id="gDate" name="GENERAL_ORG_DATE"></td>
+                <td><label for="${col_texts[3]}">${col_beautify[3]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[3]}" name="${col_names[3]}"></td>
               </tr>
               <tr>
-                <td><label for="outNumb">OUT_NUMB</label></td>
-                <td><input type="text" class="values" id="outNumb" name="OUTPUT_NUMB"></td>
+                <td><label for="${col_texts[4]}">${col_beautify[4]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[4]}" name="${col_names[4]}"></td>
               </tr>
               <tr>
-                <td><label for="outDate">OUT_DATE</label></td>
-                <td><input type="text" class="values" id="outDate" name="OUTPUT_DATE"></td>
+                <td><label for="${col_texts[5]}">${col_beautify[5]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[5]}" name="${col_names[5]}"></td>
               </tr>
               <tr>
-                <td><label for="owner">OWNER</label></td>
-                <td><input type="text" class="values" id="owner" name="FROM_OWNER"></td>
+                <td><label for="${col_texts[6]}">${col_beautify[6]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[0]}" name="${col_names[6]}"></td>
               </tr>
               <tr>
-                <td><label for="inDate">IN_DATE</label></td>
-                <td><input type="text" class="values" id="inDate" name="INPUT_DATE"></td>
+                <td><label for="${col_texts[7]}">${col_beautify[7]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[7]}" name="${col_names[7]}"></td>
               </tr>
               <tr>
-                <td><label for="inNumb">IN_NUMB</label></td>
-                <td><input type="text" class="values" id="inNumb" name="INPUT_NUMB"></td>
+                <td><label for="${col_texts[8]}">${col_beautify[8]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[8]}" name="${col_names[8]}"></td>
               </tr>
               <tr>
-                <td><label for="worker">WORKER</label></td>
-                <td><input type="text" class="values" id="worker" name="WORKER"></td>
+                <td><label for="${col_texts[9]}">${col_beautify[9]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[9]}" name="${col_names[9]}"></td>
               </tr>
               <tr>
-                <td><label for="handPass">HAND_PASS</label></td>
-                <td><input type="text" class="values" id="handPass" name="HAND_PASS"></td>
+                <td><label for="${col_texts[10]}">${col_beautify[10]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[10]}" name="${col_names[10]}"></td>
               </tr>
               <tr>
-                <td><label for="complete">COMPLETE</label></td>
-                <td><input type="text" class="values" id="complete" name="ANSWER_COMPLETE"></td>
+                <td><label for="${col_texts[11]}">${col_beautify[11]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[11]}" name="${col_names[11]}"></td>
               </tr>
               <tr>
-                <td><label for="completeDate">COMPLETE_DATE</label></td>
-                <td><input type="text" class="values" id="completeDate" name="ANSWER_DATE"></td>
+                <td><label for="${col_texts[12]}">${col_beautify[12]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[12]}" name="${col_names[12]}"></td>
               </tr>
               <tr>
-                <td><label for="completeNumb">COMPLETE_NUMB</label></td>
-                <td><input type="text" class="values" id="completeNumb" name="ANSWER_NUMB"></td>
+                <td><label for="${col_texts[13]}">${col_beautify[13]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[13]}" name="${col_names[13]}"></td>
               </tr>
               <tr>
-                <td><label for="urlOutput">URL_OUTPUT</label></td>
-                <td><input type="text" class="values" id="urlOutput" name="URL_SED_OUTPUT"></td>
+                <td><label for="${col_texts[14]}">Outp.URL</label></td>
+                <td><input type="text" class="values" id="${col_texts[14]}" name="${col_names[14]}"></td>
               </tr>
               <tr>
-                <td><label for="note">NOTE</label></td>
-                <td><input type="text" class="values" id="note" name="NOTE"></td>
+                <td><label for="${col_texts[15]}">${col_beautify[15]}</label></td>
+                <td><input type="text" class="values" id="${col_texts[15]}" name="${col_names[15]}"></td>
               </tr>
             </tbody>
           </table>
@@ -136,14 +136,14 @@
 
     </div>
     <script>
-      var oldTable = document.getElementById("oldTable");
+      var mainTable = document.getElementById("mainTable");
       var formDiv = document.getElementById('formDiv');
       var inputValues = document.querySelectorAll('.values');
 
       function ready() {
-        var rows = oldTable.getElementsByTagName("tr");
+        var rows = mainTable.getElementsByTagName("tr");
         for (let i = 0; i < rows.length; i++) {
-          var currentRow = oldTable.rows[i];
+          var currentRow = mainTable.rows[i];
           var createClickHandler = function(row) {
             return function() {
               var cell = row.getElementsByTagName("td")[0];

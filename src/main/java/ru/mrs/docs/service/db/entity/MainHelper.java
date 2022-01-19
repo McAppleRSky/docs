@@ -1,10 +1,21 @@
 package ru.mrs.docs.service.db.entity;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ru.mrs.docs.Main;
+import ru.mrs.docs.frontend.MainServlet;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainHelper {
 
+    private static final Logger LOGGER = LogManager.getLogger(MainHelper.class);
+
     public static MainEntity toEntity (Map<MainColumns, String> mainColumnToValues) {
+//        LOGGER.info("get(MainColumns.ID) " + mainColumnToValues.get(MainColumns.ID));
         return new MainEntity()
                 .setId(
                         mainColumnToValues.get(MainColumns.ID) == null ? null : Long.valueOf(
@@ -64,5 +75,11 @@ public class MainHelper {
                         mainColumnToValues.get(
                                 MainColumns.NOTE ) );
     }
+
+    /*public static Map<String, String> columns () {
+        Map<String, String> result = new HashMap<>();
+        for (MainColumns column : MainColumns.values()) {
+            result.put(column.name(), column.toString());}
+        return result;}*/
 
 }

@@ -114,7 +114,7 @@ public class MainTableBehaviour {
         }
     }
 
-    @Test
+//    @Test
     void insertValues() {
         String queryInsertTemplate = "INSERT INTO main (" +
                 "%s, %s, %s, " +

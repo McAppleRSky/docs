@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,12 +42,15 @@ public class MainServlet extends HttpServlet implements Servletable {
             List<MainEntity> entities = mainService.getAll();
             entities.sort((a, b) -> (int) (b.getId() - a.getId()));
             Map<String, Object> data = new HashMap<>();
-            data.put("main_entities", entities);
+            data.put("main_values", entities);
+            data.put("col_names", MainColumns.getNames());
+            data.put("col_texts", MainColumns.getTexts());
+            data.put("col_beautify", Main.context.get(MainColumns.class));
             freemarker.template.Configuration freemarkerConfiguration =
                     (freemarker.template.Configuration) Main.context.get(
-                            freemarker.template.Configuration.class);
+                            freemarker.template.Configuration.class );
             try (PrintWriter writer = response.getWriter()) {
-                Template template = freemarkerConfiguration.getTemplate("_main.ftl");
+                Template template = freemarkerConfiguration.getTemplate("main.ftl");
                 response.setContentType(COMMON_CONTENT_TYPE);
                 response.setStatus(HttpServletResponse.SC_OK);
                 template.process(data, writer);
@@ -93,10 +97,10 @@ public class MainServlet extends HttpServlet implements Servletable {
         }
     }
 
-    public Map<MainColumns, String> mapByColumns (HttpServletRequest request) {
+    Map<MainColumns, String> mapByColumns (HttpServletRequest request) {
         Map<MainColumns, String> result = new HashMap<>();
         for (MainColumns columns : MainColumns.values()) {
-            result.put(columns, request.getParameter(columns.toString()));
+            result.put(columns, request.getParameter(columns.name()));
         }
         return result;
     }

@@ -4,10 +4,13 @@ import org.apache.commons.lang3.NotImplementedException;
 import ru.mrs.base.service.db.Executor;
 import ru.mrs.docs.service.db.entity.MainColumns;
 import ru.mrs.docs.service.db.entity.MainEntity;
+import ru.mrs.docs.service.db.entity.MainEntityMapColumnValueStringFacade;
+import ru.mrs.docs.service.db.entity.MainHelper;
 
 import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class MainDao implements DaoOperations<MainEntity, Long> {
@@ -26,7 +29,7 @@ public class MainDao implements DaoOperations<MainEntity, Long> {
                 entities.add(
                         new MainEntity()
                                 .setId(
-                                        resultSet.getInt(
+                                        resultSet.getLong(
                                                 MainColumns.ID.toString() ) )
                                 .setUrlInput(
                                         resultSet.getString(
@@ -62,8 +65,14 @@ public class MainDao implements DaoOperations<MainEntity, Long> {
 
     @Override
     public boolean merge(MainEntity entity) {
-        throw new NotImplementedException("boolean update(MainEntity entity) need impl");
-//        return null;
+        String queryTemplate = "UPDATE main \n\t" +
+                "set %s=%s,\n\t" +
+                "WHERE %s=%s;" ;
+
+        Map<MainColumns, String> mapEntity = new MainEntityMapColumnValueStringFacade(entity);
+        executor.execUpdate("UPDATE main set WHERE ;");
+//        throw new NotImplementedException("boolean update(MainEntity entity) need impl");
+        return false;
     }
 
     @Override
