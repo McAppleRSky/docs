@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import ru.mrs.base.service.db.Executor;
 import ru.mrs.docs.PropertyKeys;
 import ru.mrs.docs.service.db.entity.MainColumns;
-import ru.mrs.docs.service.db.entity.OldTableColumns;
+//import ru.mrs.docs.service.db.entity.OldTableColumns;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -138,12 +138,12 @@ public class MainTableBehaviour {
                 MainColumns.ANSWER_NUMB,MainColumns.URL_OUTPUT,  MainColumns.NOTE
                 ,
 //                OldTableColumns.ID,
-                OldTableColumns.URL_SED_INPUT,  OldTableColumns.GENERAL_ORG_NUMB, OldTableColumns.GENERAL_ORG_DATE,
-                OldTableColumns.OUTPUT_NUMB,    OldTableColumns.OUTPUT_DATE,      OldTableColumns.FROM_OWNER,
-                OldTableColumns.INPUT_DATE,     OldTableColumns.INPUT_NUMB,       OldTableColumns.WORKER,
-                OldTableColumns.HAND_PASS,      OldTableColumns.ANSWER_COMPLETE,  OldTableColumns.ANSWER_DATE,
-                OldTableColumns.ANSWER_NUMB,    OldTableColumns.URL_SED_OUTPUT,   OldTableColumns.NOTE
-                , OldTableColumns.ID
+                MainColumns.URL_INPUT,      MainColumns.GEN_ORG_NUMB, MainColumns.GEN_ORG_DATE,
+                MainColumns.OUTPUT_NUMB,    MainColumns.OUTPUT_DATE,  MainColumns.FROM_OWNER,
+                MainColumns.INPUT_DATE,     MainColumns.INPUT_NUMB,   MainColumns.WORKER,
+                MainColumns.HAND_PASS,      MainColumns.ANSWER_COMP,  MainColumns.ANSWER_DATE,
+                MainColumns.ANSWER_NUMB,    MainColumns.URL_OUTPUT,   MainColumns.NOTE
+                , MainColumns.ID
         );
         System.out.println(queryInsert);
         queryInsert = queryInsert

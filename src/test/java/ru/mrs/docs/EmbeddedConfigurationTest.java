@@ -8,13 +8,13 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MainConfigurationTest {
+class EmbeddedConfigurationTest {
 
     @Test
     void getResource() {
         String actual = null;
         Properties properties = new Properties();
-        try (InputStream input = MainConfigurationTest.class.getClassLoader().getResourceAsStream("testConfig/test.properties")) {
+        try (InputStream input = EmbeddedConfigurationTest.class.getClassLoader().getResourceAsStream("testConfig/test.properties")) {
             properties.load(input);
             actual = properties.getProperty("test");
         } catch (IOException e) {

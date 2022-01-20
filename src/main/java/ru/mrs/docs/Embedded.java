@@ -1,6 +1,6 @@
 package ru.mrs.docs;
 
-import freemarker.template.Configuration;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
@@ -170,11 +171,13 @@ class EmbeddedConfiguration {
             String propertyString = properties.getProperty(propertyKey.toString());
             if (propertyString != null) {
                 if (RESOURCE_LOCATED.contains(propertyKey)) {
+                    ClassLoader classLoader = EmbeddedConfiguration.class.getClassLoader();
+                    String path = classLoader.getResource(propertyString).getPath();
                     propertyString = EmbeddedConfiguration.class
                             .getClassLoader()
                             .getResource(propertyString)
                             .getPath();
-                    if (osWindows) {
+                    if (osWindows && propertyString.startsWith("/")) {
                         propertyString = propertyString.substring(1);
                     }
                 } else {
@@ -196,8 +199,8 @@ class EmbeddedConfiguration {
         return mapEnumString;
     }
 
-    protected static Configuration configureFreemarker (){
-        Configuration
+    protected static freemarker.template.Configuration configureFreemarker (){
+        freemarker.template.Configuration
                 configuration = new freemarker.template.Configuration(
                 freemarker.template.Configuration.VERSION_2_3_27);
         try {

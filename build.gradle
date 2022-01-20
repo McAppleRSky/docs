@@ -1,7 +1,7 @@
 
 plugins {
     id 'java'
-    id "jacoco"
+//    id "jacoco"
 }
 
 description = "docs helper service"
@@ -17,11 +17,18 @@ test {
     // never UP-TO-DATE
 //  systemProperty "random.testing.seed", new Random().nextInt()
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
+//    finalizedBy jacocoTestReport
 }
 
-jacocoTestReport {
+/*jacocoTestReport {
     dependsOn test
+}*/
+
+repositories {
+//    mavenCentral()
+    flatDir {
+        dirs 'lib'
+    }
 }
 
 ext {
@@ -42,10 +49,6 @@ ext {
     entrypoint_args = ''
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:$fingBugs_version"
     compileOnly "org.projectlombok:lombok:$lombok_version"
@@ -63,7 +66,8 @@ dependencies {
 //    implementation "org.eclipse.jetty:apache-jsp:$jetty9_version"
 //    implementation 'jstl:jstl:1.2'
     implementation "org.freemarker:freemarker:$freemarker_version"
-    compileOnly "javax.servlet:javax.servlet-api:$servlet_version"
+//    compileOnly "javax.servlet:javax.servlet-api:$servlet_version"
+    implementation "javax.servlet:javax.servlet-api:$servlet_version"
     implementation "com.h2database:h2:$h2_version"
 //    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
 //    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
@@ -76,6 +80,22 @@ dependencies {
 //    implementation 'commons-logging:commons-logging:1.2'
 //    implementation "org.slf4j:slf4j-log4j12:2.0.0-alpha5"
 //    testImplementation "org.assertj:assertj-core:3.21.0"
+    implementation "org.eclipse.jetty:jetty-servlet:$jetty9_version"
+    implementation "org.eclipse.jetty:jetty-util:$jetty9_version"
+//    implementation 'org.apiguardian:apiguardian-api:1.1.2'
+    /*testImplementation 'org.junit.platform:junit-platform-engine:1.8.2'
+    testImplementation 'org.junit.platform:junit-platform-suite-api:1.8.2'
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.8.2'
+    testImplementation 'org.junit.platform:junit-platform-commons:1.8.2'
+    implementation 'org.opentest4j:opentest4j:1.2.0'
+    testImplementation 'org.jacoco:org.jacoco.ant:0.8.7'
+    testImplementation 'org.jacoco:org.jacoco.agent:0.8.7'
+    testImplementation 'org.jacoco:org.jacoco.core:0.8.7'
+    testImplementation 'org.jacoco:org.jacoco.report:0.8.7'*/
+    implementation "org.eclipse.jetty:jetty-security:$jetty9_version"
+    implementation "org.eclipse.jetty:jetty-http:$jetty9_version"
+    implementation "org.eclipse.jetty:jetty-io:$jetty9_version"
+
 }
 
 sourceSets {
@@ -109,7 +129,8 @@ task copyData(type: Copy) {
 
 project.configurations.implementation.setCanBeResolved(true)
 jar {
-    def manifestClasspath = "commons-lang3-3.12.0.jar log4j-core-2.17.1.jar            log4j-api-2.17.1.jar jetty-webapp-9.4.44.v20210927.jar               jetty-servlet-9.4.44.v20210927.jar                                   jetty-security-9.4.44.v20210927.jar jetty-server-9.4.44.v20210927.jarfreemarker-2.3.31.jar h2-2.1.210.jar javax.servlet-api-3.1.0.jar     jetty-http-9.4.44.v20210927.jar jetty-io-9.4.44.v20210927.jar        jetty-xml-9.4.44.v20210927.jar jetty-util-ajax-9.4.44.v20210927.jar  jetty-util-9.4.44.v20210927.jar"
+    def manifestClasspath = "commons-lang3-3.12.0.jar log4j-core-2.17.1.jar            log4j-api-2.17.1.jar jetty-webapp-9.4.44.v20210927.jar               jetty-servlet-9.4.44.v20210927.jar                                   jetty-security-9.4.44.v20210927.jar                                  freemarker-2.3.31.jar h2-2.1.210.jar javax.servlet-api-3.1.0.jar     jetty-http-9.4.44.v20210927.jar jetty-io-9.4.44.v20210927.jar        jetty-xml-9.4.44.v20210927.jar jetty-util-ajax-9.4.44.v20210927.jar  jetty-util-9.4.44.v20210927.jar jetty-server-9.4.44.v20210927.jar"
+//    def manifestClasspath = "*.jar"
 //    def manifestClasspath = configurations.implementation.collect { it.getName() }.join(' ')
 //    project.sourceSets.main.runtimeClasspath.collect { "WEB-INF/lib/${it.name}" }.join(' ')
     manifest {
@@ -124,7 +145,7 @@ jar {
         attributes["Main-Class"] = entrypoint
         attributes["Class-Path"] = manifestClasspath
     }
-    processResources.exclude('*')
+//    processResources.exclude('*')
 //    archiveName 'docs-helper-0.0.1-SNAPSHOT.jar'
     doLast {
         copy {
