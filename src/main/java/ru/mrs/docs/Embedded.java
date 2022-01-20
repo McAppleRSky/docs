@@ -171,8 +171,6 @@ class EmbeddedConfiguration {
             String propertyString = properties.getProperty(propertyKey.toString());
             if (propertyString != null) {
                 if (RESOURCE_LOCATED.contains(propertyKey)) {
-                    ClassLoader classLoader = EmbeddedConfiguration.class.getClassLoader();
-                    String path = classLoader.getResource(propertyString).getPath();
                     propertyString = EmbeddedConfiguration.class
                             .getClassLoader()
                             .getResource(propertyString)
