@@ -34,11 +34,12 @@ ext {
     jackson_version = "2.13.1"
     mockito_version = "4.2.0"//"3.12.4"
     lang3_version = "3.12.0"
-    log4j_version = "2.17.0"
-    h2_version = "2.0.206"
+    log4j_version = "2.17.1"
+    h2_version = "2.1.210"
 //    h2_version = "1.4.200"
     junit58_version = "5.8.2"
-    entrypoint = "main.Main"
+    entrypoint = "ru.mrs.docs.Embedded"
+    entrypoint_args = ''
 }
 
 repositories {
@@ -63,7 +64,6 @@ dependencies {
 //    implementation 'jstl:jstl:1.2'
     implementation "org.freemarker:freemarker:$freemarker_version"
     compileOnly "javax.servlet:javax.servlet-api:$servlet_version"
-//    compileOnly "javax.servlet:servlet-api:$servlet_version"
     implementation "com.h2database:h2:$h2_version"
 //    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
 //    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
@@ -81,21 +81,65 @@ dependencies {
 sourceSets {
     main {
         resources {
-            exclude '*.zip'
+            exclude '**/*.zip'
         }
     }
 }
 
+/*
 task copyData(type: Copy) {
     from 'data'
     into 'build/classes/java/main/data'
     exclude "*.zip"
 }
-classes.dependsOn(copyData)
+*/
+//classes.dependsOn(copyData)
 
-task copyDataTest(type: Copy) {
+/*task copyDataTest(type: Copy) {
     from 'data'
     into 'build/classes/java/test/data'
     exclude "*.zip"
+}*/
+
+/*task runMain(type : JavaExec ){
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = entrypoint
+    args entrypoint_args
+}*/
+
+project.configurations.implementation.setCanBeResolved(true)
+jar {
+    def manifestClasspath = "commons-lang3-3.12.0.jar log4j-core-2.17.1.jar            log4j-api-2.17.1.jar jetty-webapp-9.4.44.v20210927.jar               jetty-servlet-9.4.44.v20210927.jar                                   jetty-security-9.4.44.v20210927.jar jetty-server-9.4.44.v20210927.jarfreemarker-2.3.31.jar h2-2.1.210.jar javax.servlet-api-3.1.0.jar     jetty-http-9.4.44.v20210927.jar jetty-io-9.4.44.v20210927.jar        jetty-xml-9.4.44.v20210927.jar jetty-util-ajax-9.4.44.v20210927.jar  jetty-util-9.4.44.v20210927.jar"
+//    def manifestClasspath = configurations.implementation.collect { it.getName() }.join(' ')
+//    project.sourceSets.main.runtimeClasspath.collect { "WEB-INF/lib/${it.name}" }.join(' ')
+    manifest {
+        attributes["Manifest-Version"] = "1.0"
+        attributes["Created-By"] = "Gradle ${gradle.gradleVersion}"
+        attributes["Build-Jdk"] = "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})"
+        attributes["Build-OS"] = "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
+        attributes["Implementation-Title"] = project.name
+        attributes["Implementation-Version"] = project.version
+        attributes["Build-Timestamp"] = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date())
+//        attributes["Built-By"] = System.properties['user.name']
+        attributes["Main-Class"] = entrypoint
+        attributes["Class-Path"] = manifestClasspath
+    }
+    processResources.exclude('*')
+//    archiveName 'docs-helper-0.0.1-SNAPSHOT.jar'
+    doLast {
+        copy {
+            from layout.buildDirectory.dir("libs")
+            from "lib"
+            include "*.jar"
+            into "bin"
+        }
+        copy {
+            from 'src/main/resources'
+            exclude '**/*.zip'
+            include "**/*.*"
+            into "bin"
+        }
+    }
 }
-test.dependsOn(copyDataTest)
+
+//test.dependsOn(copyDataTest)

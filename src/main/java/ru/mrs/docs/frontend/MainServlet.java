@@ -5,7 +5,7 @@ import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.mrs.base.service.account.AccountService;
-import ru.mrs.docs.Main;
+import ru.mrs.docs.Embedded;
 import ru.mrs.docs.service.account.UserProfile;
 import ru.mrs.docs.service.db.MainService;
 import ru.mrs.docs.service.db.entity.MainColumns;
@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +28,9 @@ public class MainServlet extends HttpServlet implements Servletable {
 
     public static final String PATH_SPEC = "/main";
 
-    private final AccountService accountService = (AccountService) Main.context.get(AccountService.class);
+    private final AccountService accountService = (AccountService) Embedded.context.get(AccountService.class);
 
-    private final MainService mainService = (MainService) Main.context.get(MainService.class);
+    private final MainService mainService = (MainService) Embedded.context.get(MainService.class);
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -45,9 +44,9 @@ public class MainServlet extends HttpServlet implements Servletable {
             data.put("main_values", entities);
             data.put("col_names", MainColumns.getNames());
             data.put("col_texts", MainColumns.getTexts());
-            data.put("col_beautify", Main.context.get(MainColumns.class));
+            data.put("col_beautify", Embedded.context.get(MainColumns.class));
             freemarker.template.Configuration freemarkerConfiguration =
-                    (freemarker.template.Configuration) Main.context.get(
+                    (freemarker.template.Configuration) Embedded.context.get(
                             freemarker.template.Configuration.class );
             try (PrintWriter writer = response.getWriter()) {
                 Template template = freemarkerConfiguration.getTemplate("main.ftl");

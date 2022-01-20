@@ -2,12 +2,7 @@ package ru.mrs.docs.service.db.entity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.mrs.docs.Main;
-import ru.mrs.docs.frontend.MainServlet;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainHelper {

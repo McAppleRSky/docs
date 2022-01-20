@@ -2,7 +2,7 @@ package ru.mrs.docs.frontend;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.mrs.docs.Main;
+import ru.mrs.docs.Embedded;
 import ru.mrs.base.service.account.AccountService;
 import ru.mrs.docs.service.account.UserProfile;
 
@@ -19,7 +19,7 @@ public class LoginServlet extends HttpServlet implements Servletable{
 
     private static final Logger LOGGER = LogManager.getLogger(LoginServlet.class);
 
-    private final AccountService accountService = (AccountService)Main.context.get(AccountService.class);
+    private final AccountService accountService = (AccountService) Embedded.context.get(AccountService.class);
 
     @Override
     public void doGet(HttpServletRequest request,

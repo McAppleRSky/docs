@@ -5,7 +5,7 @@ import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.mrs.base.service.account.AccountService;
-import ru.mrs.docs.Main;
+import ru.mrs.docs.Embedded;
 import ru.mrs.docs.PropertyKeys;
 import ru.mrs.docs.service.account.UserProfile;
 
@@ -22,9 +22,9 @@ public class GreetingServlet extends HttpServlet implements Servletable{
 
     public static final String PATH_SPEC = "/greeting";
 
-    private final String moduleName = Main.context.get(PropertyKeys.MODULE_NAME).toString();
+    private final String moduleName = Embedded.context.get(PropertyKeys.MODULE_NAME).toString();
 
-    private final AccountService accountService = (AccountService)Main.context.get(AccountService.class);
+    private final AccountService accountService = (AccountService) Embedded.context.get(AccountService.class);
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType(COMMON_CONTENT_TYPE);
@@ -32,7 +32,7 @@ public class GreetingServlet extends HttpServlet implements Servletable{
         if (userProfile!=null) {
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC);
             freemarker.template.Configuration
-                    freemarkerConfiguration = (freemarker.template.Configuration)Main.context.get(
+                    freemarkerConfiguration = (freemarker.template.Configuration) Embedded.context.get(
                             freemarker.template.Configuration.class );
             Template template = null;
             Map<String, String> data = new HashMap<>();

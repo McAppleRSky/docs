@@ -34,12 +34,13 @@ import java.io.InputStream;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
-public class Main extends MainConfiguration {
+public class Embedded extends EmbeddedConfiguration {
 
-    private static final Logger LOGGER = configureLogger(Main.class);
+    private static final Logger LOGGER = configureLogger(Embedded.class);
     public static final Map<Object, Object> context = new HashMap();
 
     static {
+        context.entrySet().forEach(entry -> { LOGGER.info(entry.getKey() + " " + entry.getValue()); });
         context.putAll(loadProperties());
         context.put(
                 AccountService.class, configureAccountService(
@@ -59,6 +60,7 @@ public class Main extends MainConfiguration {
                         context.get(PropertyKeys.DB_DATA_PATH)
                 ) );
         context.put(MainColumns.class, beautifyMainColumns());
+        context.entrySet().forEach(entry -> { LOGGER.info(entry.getKey() + " " + entry.getValue()); });
     }
 
     public static void main(String[] args) throws Exception {
@@ -97,7 +99,7 @@ public class Main extends MainConfiguration {
         servletContextHandler.setErrorHandler(errorHandler);*/
 
 //        int port = ;
-        Server server = new Server( Integer.parseInt( Main.context.get( PropertyKeys.SERVER_PORT ).toString() ) );
+        Server server = new Server( Integer.parseInt( Embedded.context.get( PropertyKeys.SERVER_PORT ).toString() ) );
 //        server.setHandler(servletContextHandler);
         server.setHandler(handlerList);
         server.start();
@@ -108,7 +110,7 @@ public class Main extends MainConfiguration {
 }
 
 //@SuppressWarnings( "deprecation" )
-class MainConfiguration {
+class EmbeddedConfiguration {
 
     protected static Logger configureLogger(Class c){
         ConfigurationBuilder<BuiltConfiguration> cfgBuilder = ConfigurationBuilderFactory.newConfigurationBuilder();
@@ -146,13 +148,16 @@ class MainConfiguration {
         EnumSet<PropertyKeys> RESOURCE_LOCATED = EnumSet.of(
                 PropertyKeys.RESOURCE_BASE
                 ,PropertyKeys.DEFAULT_PROF
-                ,PropertyKeys.CONTEXT_PATH );
-        EnumSet<PropertyKeys> SOURCE_LOCATED = EnumSet.of(
-                PropertyKeys.DB_DATA_PATH );
+                ,PropertyKeys.CONTEXT_PATH
+                ,PropertyKeys.DB_DATA_PATH );
+        EnumSet<PropertyKeys> SOURCE_LOCATED = EnumSet
+                .noneOf(
+                //.of(
+                PropertyKeys.class );
         Map<PropertyKeys, String> mapEnumString = new HashMap<>();
         Properties properties = new Properties();
         for (String propertyFile : new String[]{"docs-hide.properties", "docs.properties"}) {
-            try (InputStream input = MainConfiguration.class.getClassLoader().getResourceAsStream(propertyFile)) {
+            try (InputStream input = EmbeddedConfiguration.class.getClassLoader().getResourceAsStream(propertyFile)) {
                 properties.load(input);
             }catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -165,7 +170,7 @@ class MainConfiguration {
             String propertyString = properties.getProperty(propertyKey.toString());
             if (propertyString != null) {
                 if (RESOURCE_LOCATED.contains(propertyKey)) {
-                    propertyString = MainConfiguration.class
+                    propertyString = EmbeddedConfiguration.class
                             .getClassLoader()
                             .getResource(propertyString)
                             .getPath();
@@ -175,7 +180,7 @@ class MainConfiguration {
                 } else {
                     if (SOURCE_LOCATED.contains(propertyKey)) {
                         // https://stackoverflow.com/questions/320542/how-to-get-the-path-of-a-running-jar-file
-                        propertyString = MainConfiguration.class
+                        propertyString = EmbeddedConfiguration.class
                                 .getProtectionDomain()
                                 .getCodeSource()
                                 .getLocation()
@@ -199,7 +204,7 @@ class MainConfiguration {
             configuration
                     .setDirectoryForTemplateLoading(
                             new File(
-                                    MainConfiguration.class
+                                    EmbeddedConfiguration.class
                                             .getClassLoader()
                                             .getResource("templates")
                                             .getPath() ) );

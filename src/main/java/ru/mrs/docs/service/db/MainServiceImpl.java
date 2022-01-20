@@ -20,7 +20,7 @@ public class MainServiceImpl implements MainService {
     private final String pass;
 
     public MainServiceImpl(String name, String pass, String path) {
-        this.url = "jdbc:h2:" + path;
+        this.url = "jdbc:h2:" + path + "/h2";
         this.name = name;
         this.pass = pass;
         LOGGER.info(url + " " + this.name + " " + this.pass + " ");
