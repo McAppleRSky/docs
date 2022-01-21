@@ -23,6 +23,8 @@ public enum PropertyKeys {
             "context.path" ),
     OS_WINDOWS(
             "os.windows" ),
+    TEMPLATE_BASE(
+            "template.base" ),
     ;
 
     private final String text;

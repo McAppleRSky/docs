@@ -3,15 +3,16 @@ package ru.mrs.docs.service.account;
 import ru.mrs.base.service.account.AccountService;
 import ru.mrs.base.service.account.AccountServiceAbstract;
 import org.apache.commons.lang3.NotImplementedException;
+import ru.mrs.base.service.file.ObjectWriter;
 
 public class AccountServiceImpl extends AccountServiceAbstract<UserProfile> implements AccountService<UserProfile> {
 
     public AccountServiceImpl() {
         super();
     }
-    public AccountServiceImpl(String login, UserProfile userProfile) {
+    public AccountServiceImpl(Object login, Object defaultProfile) {
         this();
-        loginToProfile.put(login, userProfile);
+        loginToProfile.put(login.toString(), (UserProfile)ObjectWriter.readResource(defaultProfile.toString()));
     }
 
     @Override

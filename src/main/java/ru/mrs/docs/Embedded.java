@@ -1,6 +1,6 @@
 package ru.mrs.docs;
 
-import freemarker.cache.WebappTemplateLoader;
+import freemarker.cache.FileTemplateLoader;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
@@ -18,14 +18,12 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import ru.mrs.base.service.account.AccountService;
-import ru.mrs.base.service.file.ObjectWriter;
 import ru.mrs.base.service.file.Vfs;
 import ru.mrs.base.service.file.VfsAbstract;
 import ru.mrs.docs.frontend.GreetingServlet;
 import ru.mrs.docs.frontend.LoginServlet;
 import ru.mrs.docs.frontend.MainServlet;
 import ru.mrs.docs.service.account.AccountServiceImpl;
-import ru.mrs.docs.service.account.UserProfile;
 import ru.mrs.docs.service.db.MainService;
 import ru.mrs.docs.service.db.MainServiceImpl;
 import ru.mrs.docs.service.db.entity.MainColumns;
@@ -45,12 +43,29 @@ public class Embedded extends EmbeddedConfiguration {
     public static final Map<Object, Object> context = new HashMap();
 
     static {
-        context.put(freemarker.template.Configuration.class, configureFreemarker());
         context.entrySet().forEach(entry -> { LOGGER.info(entry.getKey() + " " + entry.getValue()); });
-        context.put(Vfs.class, new VfsImpl("."));
-        context.putAll(loadProperties());
+        {
+            Map<PropertyKeys, String> contextProperties = loadProperties();
+            VfsImpl vfs = new VfsImpl(".");
+            freemarker.template.Configuration freemarkerTemplateConfiguration
+                     = configureFreemarker();
+            FileTemplateLoader fileTemplateLoader = null;
+            try {
+                fileTemplateLoader = new FileTemplateLoader(
+                        vfs.getFile(
+                                contextProperties.get(PropertyKeys.TEMPLATE_BASE) ) );
+                freemarkerTemplateConfiguration
+                        .setTemplateLoader(
+                                fileTemplateLoader );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            context.put(Vfs.class, vfs);
+            context.putAll(contextProperties);
+            context.put(freemarker.template.Configuration.class, configureFreemarker());
+        }
         context.put(
-                AccountService.class, configureAccountService(
+                AccountService.class, new AccountServiceImpl(
                         context.get(PropertyKeys.DEFAULT_USER),
                         context.get(PropertyKeys.DEFAULT_PROF) ) );
         /*context.put(
@@ -77,22 +92,17 @@ public class Embedded extends EmbeddedConfiguration {
         mBeanServer.registerMBean(serverStatistics, name);*/
 
 
-        /*freemarker.template.Configuration freemarkerTemplateConfiguration
-                 = (freemarker.template.Configuration) context.get(freemarker.template.Configuration.class);
-        freemarkerTemplateConfiguration.setTemplateLoader(new WebappTemplateLoader(servletContext))*/
-
-//        servletContextHandler.addServlet(new ServletHolder( new WebSocketChatServlet() ), WebSocketChatServlet.PATH);
-        ResourceHandler resource_handler = new ResourceHandler();
-        resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase( context.get(PropertyKeys.RESOURCE_BASE).toString() );
-
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        servletContextHandler.setContextPath(context.get(PropertyKeys.CONTEXT_PATH).toString());
-        ((freemarker.template.Configuration) context.get(freemarker.template.Configuration.class))
-                .setServletContextForTemplateLoading(servletContextHandler.getServletContext(), "/WEB-INF/templates");
+//        servletContextHandler.setContextPath("/");
         servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.PATH_SPEC );
         servletContextHandler.addServlet( new ServletHolder( new LoginServlet() ), LoginServlet.PATH_SPEC );
         servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.PATH_SPEC );
+
+        ResourceHandler resource_handler = new ResourceHandler();
+        resource_handler.setDirectoriesListed(true);
+        Vfs vfs = (Vfs) context.get(Vfs.class);
+        String resourceBase = vfs.getAbsolutePath(context.get(PropertyKeys.RESOURCE_BASE).toString());
+        resource_handler.setResourceBase(resourceBase);
 
 //        ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
 //        errorHandler.addErrorPage(404, "missing.html");
@@ -110,7 +120,6 @@ public class Embedded extends EmbeddedConfiguration {
         errorHandler.addErrorPage(404, "/index.html");
         servletContextHandler.setErrorHandler(errorHandler);*/
 
-//        int port = ;
         Server server = new Server( Integer.parseInt( Embedded.context.get( PropertyKeys.SERVER_PORT ).toString() ) );
 //        server.setHandler(servletContextHandler);
         server.setHandler(handlerList);
@@ -156,7 +165,7 @@ class EmbeddedConfiguration {
         return loggerContext.getLogger(c.getName());
     }
 
-    protected static Map loadProperties() {
+    protected static Map<PropertyKeys, String> loadProperties() {
         /*EnumSet<PropertyKeys> RESOURCE_LOCATED = EnumSet.of(
                 PropertyKeys.RESOURCE_BASE
                 ,PropertyKeys.DEFAULT_PROF
@@ -211,9 +220,9 @@ class EmbeddedConfiguration {
     }
 
     protected static freemarker.template.Configuration configureFreemarker (){
-        freemarker.template.Configuration
-                configuration = new freemarker.template.Configuration(
-                freemarker.template.Configuration.VERSION_2_3_27 );
+        freemarker.template.Configuration freemarkerTemplateConfiguration
+                 = new freemarker.template.Configuration(
+                         freemarker.template.Configuration.VERSION_2_3_27 );
         /*try {
             configuration
 
@@ -226,13 +235,13 @@ class EmbeddedConfiguration {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-        return configuration;
+        return freemarkerTemplateConfiguration;
     }
 
-    protected static AccountService<UserProfile> configureAccountService(Object defaultLogin, Object defaultProfile) {
+    /*protected static AccountService<UserProfile> configureAccountService(Object defaultLogin, Object defaultProfile) {
         UserProfile userProfile = (UserProfile)ObjectWriter.readResource(defaultProfile.toString());
         return new AccountServiceImpl(defaultLogin.toString(), userProfile);
-    }
+    }*/
 
     /*protected static DBService configureDBService(Object name, Object pass, Object path) {
         return new DBServiceImpl(name.toString(), pass.toString(), path.toString());
@@ -269,6 +278,10 @@ class VfsImpl extends VfsAbstract implements Vfs {
         super(root);
     }
 
+    public File getFile(String file) {
+        return new File(getRoot() + "/" + file);
+    }
+
     @Override
     public boolean ifExist(String path) {
         throw new NotImplementedException("boolean ifExist(String path)");
@@ -284,7 +297,7 @@ class VfsImpl extends VfsAbstract implements Vfs {
     @Override
     public String getAbsolutePath(String file) {
 //        throw new NotImplementedException("String getAbsolutePath(String file)");
-        return new File(file).getAbsolutePath();
+        return new File(getRoot() + "/" + file).getAbsolutePath();
     }
 
     @Override
