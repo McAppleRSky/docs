@@ -3,6 +3,8 @@ package ru.mrs.docs.service.db;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.mrs.base.service.file.Vfs;
+import ru.mrs.docs.Embedded;
 import ru.mrs.docs.service.db.dao.MainDao;
 import ru.mrs.docs.service.db.entity.MainEntity;
 
@@ -14,15 +16,17 @@ import java.util.List;
 public class MainServiceImpl implements MainService {
 
     private static final Logger LOGGER = LogManager.getLogger(MainDao.class);
+    private static final Vfs VFS = (Vfs) Embedded.context.get(Vfs.class);
 
     private final String url;
     private final String name;
     private final String pass;
 
-    public MainServiceImpl(String name, String pass, String path) {
-        this.url = "jdbc:h2:" + path + "/h2";
-        this.name = name;
-        this.pass = pass;
+    public MainServiceImpl(Object name, Object pass, Object path) {
+        String absolutePath = VFS.getAbsolutePath(path.toString());
+        this.url = "jdbc:h2:" + absolutePath + "/h2";
+        this.name = name.toString();
+        this.pass = pass.toString();
         LOGGER.info(url + " " + this.name + " " + this.pass + " ");
     }
 

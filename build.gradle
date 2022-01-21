@@ -95,7 +95,6 @@ dependencies {
     implementation "org.eclipse.jetty:jetty-security:$jetty9_version"
     implementation "org.eclipse.jetty:jetty-http:$jetty9_version"
     implementation "org.eclipse.jetty:jetty-io:$jetty9_version"
-
 }
 
 sourceSets {

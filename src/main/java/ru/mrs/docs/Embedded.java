@@ -1,6 +1,7 @@
 package ru.mrs.docs;
 
-
+import freemarker.cache.WebappTemplateLoader;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -18,6 +19,8 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import ru.mrs.base.service.account.AccountService;
 import ru.mrs.base.service.file.ObjectWriter;
+import ru.mrs.base.service.file.Vfs;
+import ru.mrs.base.service.file.VfsAbstract;
 import ru.mrs.docs.frontend.GreetingServlet;
 import ru.mrs.docs.frontend.LoginServlet;
 import ru.mrs.docs.frontend.MainServlet;
@@ -31,9 +34,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.*;
 
+// https://zetcode.com/java/jetty/embedded/
+// https://stackoverflow.com/questions/32378028/embedded-jetty-handling-urls-to-serve-content
 @SuppressWarnings("unchecked")
 public class Embedded extends EmbeddedConfiguration {
 
@@ -41,25 +45,26 @@ public class Embedded extends EmbeddedConfiguration {
     public static final Map<Object, Object> context = new HashMap();
 
     static {
+        context.put(freemarker.template.Configuration.class, configureFreemarker());
         context.entrySet().forEach(entry -> { LOGGER.info(entry.getKey() + " " + entry.getValue()); });
+        context.put(Vfs.class, new VfsImpl("."));
         context.putAll(loadProperties());
         context.put(
                 AccountService.class, configureAccountService(
                         context.get(PropertyKeys.DEFAULT_USER),
                         context.get(PropertyKeys.DEFAULT_PROF) ) );
-        context.put(freemarker.template.Configuration.class, configureFreemarker());
         /*context.put(
                 DBService.class, configureDBService(
                         context.get(PropertyKeys.DB_USR_NAME),
                         context.get(PropertyKeys.DB_USR_PASSWORD),
                         context.get(PropertyKeys.DB_DATA_PATH)
                         ) );*/
+//        new MainServiceImpl(name.toString(), pass.toString(), path.toString());
         context.put(
-                MainService.class, configureMainService(
+                MainService.class, new MainServiceImpl(
                         context.get(PropertyKeys.DB_USR_NAME),
                         context.get(PropertyKeys.DB_USR_PASSWORD),
-                        context.get(PropertyKeys.DB_DATA_PATH)
-                ) );
+                        context.get(PropertyKeys.DB_DATA_PATH) ) );
         context.put(MainColumns.class, beautifyMainColumns());
         context.entrySet().forEach(entry -> { LOGGER.info(entry.getKey() + " " + entry.getValue()); });
     }
@@ -71,20 +76,27 @@ public class Embedded extends EmbeddedConfiguration {
         ObjectName name = new ObjectName("ServiceManager:type=AccountServiceController");
         mBeanServer.registerMBean(serverStatistics, name);*/
 
-        ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-//        servletContextHandler.addServlet(new ServletHolder( new WebSocketChatServlet() ), WebSocketChatServlet.PATH);
 
-        servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.PATH_SPEC );
-        servletContextHandler.addServlet( new ServletHolder( new LoginServlet() ), LoginServlet.PATH_SPEC );
-        servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.PATH_SPEC );
+        /*freemarker.template.Configuration freemarkerTemplateConfiguration
+                 = (freemarker.template.Configuration) context.get(freemarker.template.Configuration.class);
+        freemarkerTemplateConfiguration.setTemplateLoader(new WebappTemplateLoader(servletContext))*/
+
+//        servletContextHandler.addServlet(new ServletHolder( new WebSocketChatServlet() ), WebSocketChatServlet.PATH);
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
         resource_handler.setResourceBase( context.get(PropertyKeys.RESOURCE_BASE).toString() );
 
+        ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        servletContextHandler.setContextPath(context.get(PropertyKeys.CONTEXT_PATH).toString());
+        ((freemarker.template.Configuration) context.get(freemarker.template.Configuration.class))
+                .setServletContextForTemplateLoading(servletContextHandler.getServletContext(), "/WEB-INF/templates");
+        servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.PATH_SPEC );
+        servletContextHandler.addServlet( new ServletHolder( new LoginServlet() ), LoginServlet.PATH_SPEC );
+        servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.PATH_SPEC );
+
 //        ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
 //        errorHandler.addErrorPage(404, "missing.html");
 //        servletContextHandler.setErrorHandler(errorHandler);
-//        servletContextHandler.setContextPath(context.get(PropertyKeys.context_path).toString());
 
         Handler[] handlers = {
                 resource_handler
@@ -94,7 +106,6 @@ public class Embedded extends EmbeddedConfiguration {
 
         HandlerList handlerList = new HandlerList();
         handlerList.setHandlers(handlers);
-
         /*ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
         errorHandler.addErrorPage(404, "/index.html");
         servletContextHandler.setErrorHandler(errorHandler);*/
@@ -146,7 +157,7 @@ class EmbeddedConfiguration {
     }
 
     protected static Map loadProperties() {
-        EnumSet<PropertyKeys> RESOURCE_LOCATED = EnumSet.of(
+        /*EnumSet<PropertyKeys> RESOURCE_LOCATED = EnumSet.of(
                 PropertyKeys.RESOURCE_BASE
                 ,PropertyKeys.DEFAULT_PROF
                 ,PropertyKeys.CONTEXT_PATH
@@ -154,8 +165,7 @@ class EmbeddedConfiguration {
         EnumSet<PropertyKeys> SOURCE_LOCATED = EnumSet
                 .noneOf(
                 //.of(
-                PropertyKeys.class );
-        Map<PropertyKeys, String> mapEnumString = new HashMap<>();
+                PropertyKeys.class );*/
         Properties properties = new Properties();
         for (String propertyFile : new String[]{"docs-hide.properties", "docs.properties"}) {
             try (InputStream input = EmbeddedConfiguration.class.getClassLoader().getResourceAsStream(propertyFile)) {
@@ -166,11 +176,11 @@ class EmbeddedConfiguration {
                 ex.printStackTrace();
             }
         }
-        boolean osWindows = System.getProperty("os.name").startsWith("Windows");
+        Map<PropertyKeys, String> mapEnumString = new HashMap<>();
         for (PropertyKeys propertyKey : PropertyKeys.values()) {
             String propertyString = properties.getProperty(propertyKey.toString());
             if (propertyString != null) {
-                if (RESOURCE_LOCATED.contains(propertyKey)) {
+                /*if (RESOURCE_LOCATED.contains(propertyKey)) {
                     propertyString = EmbeddedConfiguration.class
                             .getClassLoader()
                             .getResource(propertyString)
@@ -190,19 +200,23 @@ class EmbeddedConfiguration {
                             propertyString = propertyString.substring(1);
                         }
                     }
-                }
-                mapEnumString.put(propertyKey,propertyString);
+                }*/
+                mapEnumString.put(propertyKey, propertyString);
             }
         }
+        mapEnumString.put(
+                PropertyKeys.OS_WINDOWS,
+                System.getProperty("os.name").startsWith("Windows") ? "any win" : null );
         return mapEnumString;
     }
 
     protected static freemarker.template.Configuration configureFreemarker (){
         freemarker.template.Configuration
                 configuration = new freemarker.template.Configuration(
-                freemarker.template.Configuration.VERSION_2_3_27);
-        try {
+                freemarker.template.Configuration.VERSION_2_3_27 );
+        /*try {
             configuration
+
                     .setDirectoryForTemplateLoading(
                             new File(
                                     EmbeddedConfiguration.class
@@ -211,21 +225,21 @@ class EmbeddedConfiguration {
                                             .getPath() ) );
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         return configuration;
     }
 
     protected static AccountService<UserProfile> configureAccountService(Object defaultLogin, Object defaultProfile) {
-        UserProfile userProfile = (UserProfile)ObjectWriter.read(defaultProfile.toString());
+        UserProfile userProfile = (UserProfile)ObjectWriter.readResource(defaultProfile.toString());
         return new AccountServiceImpl(defaultLogin.toString(), userProfile);
     }
 
     /*protected static DBService configureDBService(Object name, Object pass, Object path) {
         return new DBServiceImpl(name.toString(), pass.toString(), path.toString());
     }*/
-    protected static MainService configureMainService(Object name, Object pass, Object path) {
+    /*protected static MainService configureMainService(Object name, Object pass, Object path) {
         return new MainServiceImpl(name.toString(), pass.toString(), path.toString());
-    }
+    }*/
     protected static Collection<String> beautifyMainColumns() {
         Map<MainColumns, String> result = new LinkedHashMap<>();
         result.put(MainColumns.ID, "Iden.");
@@ -245,6 +259,86 @@ class EmbeddedConfiguration {
         result.put(MainColumns.URL_OUTPUT, "External URL on sending document");
         result.put(MainColumns.NOTE, "Note");
         return result.values();
+    }
+
+}
+
+class VfsImpl extends VfsAbstract implements Vfs {
+
+    public VfsImpl(String root) {
+        super(root);
+    }
+
+    @Override
+    public boolean ifExist(String path) {
+        throw new NotImplementedException("boolean ifExist(String path)");
+//        return false;
+    }
+
+    @Override
+    public boolean isDirectory(String path) {
+        throw new NotImplementedException("boolean isDirectory(String path)");
+//        return false;
+    }
+
+    @Override
+    public String getAbsolutePath(String file) {
+//        throw new NotImplementedException("String getAbsolutePath(String file)");
+        return new File(file).getAbsolutePath();
+    }
+
+    @Override
+    public byte[] getBytes(String file) {
+        throw new NotImplementedException("return new byte[0];");
+//        return new byte[0];
+    }
+
+    @Override
+    public String getUTF8Text(String path) {
+        throw new NotImplementedException("String getUTF8Text(String path)");
+//        return null;
+    }
+
+    @Override
+    public Iterator<String> getIterator(String startDir) {
+        throw new NotImplementedException("Iterator<String> getIterator(String startDir)");
+//        return null;
+    }
+
+    @Override
+    public boolean mkdir(String path) {
+        throw new NotImplementedException("boolean mkdir(String path)");
+//        return false;
+    }
+
+    @Override
+    public boolean ifExistRoot() {
+        throw new NotImplementedException("boolean ifExistRoot()");
+//        return false;
+    }
+
+    @Override
+    public boolean isDirectoryRoot() {
+        throw new NotImplementedException("boolean isDirectoryRoot()");
+//        return false;
+    }
+
+    @Override
+    public boolean mkdirRoot() {
+        throw new NotImplementedException("boolean mkdirRoot()");
+//        return false;
+    }
+
+    @Override
+    public Iterator<String> getIteratorRoot() {
+        throw new NotImplementedException("Iterator<String> getIteratorRoot()");
+//        return null;
+    }
+
+    @Override
+    public boolean remove(String file) {
+        throw new NotImplementedException("boolean remove(String file) ");
+//        return false;
     }
 
 }

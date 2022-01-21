@@ -2,7 +2,7 @@ package ru.mrs.base.service.file;
 
 import java.util.Iterator;
 
-public interface VFS {
+public interface Vfs {
 
     boolean ifExist (String path);
     boolean isDirectory(String path);

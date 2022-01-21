@@ -22,7 +22,7 @@ public class GreetingServlet extends HttpServlet implements Servletable{
 
     public static final String PATH_SPEC = "/greeting";
 
-    private final String moduleName = Embedded.context.get(PropertyKeys.MODULE_NAME).toString();
+//    private final String moduleName = Embedded.context.get(PropertyKeys.MODULE_NAME).toString();
 
     private final AccountService accountService = (AccountService) Embedded.context.get(AccountService.class);
 
@@ -37,9 +37,11 @@ public class GreetingServlet extends HttpServlet implements Servletable{
             Template template = null;
             Map<String, String> data = new HashMap<>();
             data.put("login", userProfile.getLogin());
-            data.put(PropertyKeys.MODULE_NAME.toString(), moduleName);
+            data.put(
+                    PropertyKeys.MODULE_NAME.toString(),
+                    Embedded.context.get(PropertyKeys.MODULE_NAME).toString() );
             try ( PrintWriter writer = response.getWriter() ) {
-                template = freemarkerConfiguration.getTemplate("greeting.ftl");
+                template = freemarkerConfiguration.getTemplate(Templates.GREETING.toString());
                 response.setContentType(COMMON_CONTENT_TYPE);
                 response.setStatus(HttpServletResponse.SC_OK);
                 template.process(data, writer);

@@ -1,5 +1,7 @@
 package ru.mrs.base.service.file;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 import java.io.*;
 
 public class ObjectWriter {
@@ -16,10 +18,24 @@ public class ObjectWriter {
     }
 
     public static Object read(String fileName) {
-        try (FileInputStream out = new FileInputStream(fileName)) {
-            BufferedInputStream bout = new BufferedInputStream(out);
-            ObjectInputStream dout = new ObjectInputStream(bout);
-            return dout.readObject();
+        try (FileInputStream fileInputStream = new FileInputStream(fileName)) {
+            BufferedInputStream bufferedInputStreamout = new BufferedInputStream(fileInputStream);
+            ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStreamout);
+            return objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public static void writeResource(Object object, String resource) {
+        throw new NotImplementedException("void writeResource(Object object, String resource)");
+    }
+
+    public static Object readResource(String resource) {
+        try (InputStream inputStream = ObjectWriter.class.getClassLoader().getResourceAsStream(resource)) {
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+            ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStream);
+            return objectInputStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;

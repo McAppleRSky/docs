@@ -20,7 +20,10 @@ public enum PropertyKeys {
     RESOURCE_BASE(
             "resource.base" ),
     CONTEXT_PATH(
-            "context.path" );
+            "context.path" ),
+    OS_WINDOWS(
+            "os.windows" ),
+    ;
 
     private final String text;
 
