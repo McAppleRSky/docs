@@ -1,5 +1,6 @@
 package ru.mrs.base.service.file;
 
+import java.io.File;
 import java.util.Iterator;
 
 public interface Vfs {
@@ -11,11 +12,11 @@ public interface Vfs {
     String getUTF8Text(String path);
     Iterator<String> getIterator(String startDir);
     boolean mkdir(String path);
-
     boolean ifExistRoot();
     boolean isDirectoryRoot();
     boolean mkdirRoot();
     Iterator<String> getIteratorRoot();
     boolean remove(String file);
+    File getFile(String file);
 
 }

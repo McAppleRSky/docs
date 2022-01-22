@@ -43,27 +43,12 @@ public class Embedded extends EmbeddedConfiguration {
     public static final Map<Object, Object> context = new HashMap();
 
     static {
-        context.entrySet().forEach(entry -> { LOGGER.info(entry.getKey() + " " + entry.getValue()); });
-        {
-            Map<PropertyKeys, String> contextProperties = loadProperties();
-            VfsImpl vfs = new VfsImpl(".");
-            freemarker.template.Configuration freemarkerTemplateConfiguration
-                     = configureFreemarker();
-            FileTemplateLoader fileTemplateLoader = null;
-            try {
-                fileTemplateLoader = new FileTemplateLoader(
-                        vfs.getFile(
-                                contextProperties.get(PropertyKeys.TEMPLATE_BASE) ) );
-                freemarkerTemplateConfiguration
-                        .setTemplateLoader(
-                                fileTemplateLoader );
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            context.put(Vfs.class, vfs);
-            context.putAll(contextProperties);
-            context.put(freemarker.template.Configuration.class, configureFreemarker());
-        }
+        LOGGER.info("Context count : " + context.size());
+        context.put(Vfs.class, new VfsImpl("content"));
+        context.putAll(loadProperties());
+        context.put(freemarker.template.Configuration.class, configureFreemarker(
+                (Vfs)context.get(Vfs.class),
+                context.get(PropertyKeys.TEMPLATE_BASE) ) );
         context.put(
                 AccountService.class, new AccountServiceImpl(
                         context.get(PropertyKeys.DEFAULT_USER),
@@ -81,6 +66,7 @@ public class Embedded extends EmbeddedConfiguration {
                         context.get(PropertyKeys.DB_USR_PASSWORD),
                         context.get(PropertyKeys.DB_DATA_PATH) ) );
         context.put(MainColumns.class, beautifyMainColumns());
+        LOGGER.info("Context count : " + context.size());
         context.entrySet().forEach(entry -> { LOGGER.info(entry.getKey() + " " + entry.getValue()); });
     }
 
@@ -219,7 +205,7 @@ class EmbeddedConfiguration {
         return mapEnumString;
     }
 
-    protected static freemarker.template.Configuration configureFreemarker (){
+    protected static freemarker.template.Configuration configureFreemarker (Vfs vfs, Object file) {
         freemarker.template.Configuration freemarkerTemplateConfiguration
                  = new freemarker.template.Configuration(
                          freemarker.template.Configuration.VERSION_2_3_27 );
@@ -235,6 +221,18 @@ class EmbeddedConfiguration {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
+
+//        freemarker.template.Configuration freemarkerTemplateConfiguration = configureFreemarker();
+        FileTemplateLoader fileTemplateLoader = null;
+        try {
+            fileTemplateLoader = new FileTemplateLoader(
+                    vfs.getFile(file.toString() ) );
+            freemarkerTemplateConfiguration
+                    .setTemplateLoader(
+                            fileTemplateLoader );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return freemarkerTemplateConfiguration;
     }
 
@@ -278,6 +276,7 @@ class VfsImpl extends VfsAbstract implements Vfs {
         super(root);
     }
 
+    @Override
     public File getFile(String file) {
         return new File(getRoot() + "/" + file);
     }

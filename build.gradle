@@ -159,7 +159,15 @@ jar {
             include "**/*.*"
             into "bin"
         }
+        copy {
+            from 'content'
+            into "bin/content"
+        }
     }
+}
+
+clean{
+    delete 'bin'
 }
 
 //test.dependsOn(copyDataTest)
