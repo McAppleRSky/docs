@@ -98,8 +98,8 @@ public class MainServlet extends HttpServlet implements Servletable {
 
     Map<MainColumns, String> mapByColumns (HttpServletRequest request) {
         Map<MainColumns, String> result = new HashMap<>();
-        for (MainColumns columns : MainColumns.values()) {
-            result.put(columns, request.getParameter(columns.name()));
+        for (MainColumns column : MainColumns.values()) {
+            result.put(column, request.getParameter(column.name()));
         }
         return result;
     }

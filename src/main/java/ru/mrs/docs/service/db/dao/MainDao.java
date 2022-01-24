@@ -45,7 +45,7 @@ public class MainDao implements DaoOperations<MainEntity, Long> {
                                 .setUrlOutput(
                                         resultSet.getString(
                                                 MainColumns.URL_OUTPUT.toString() ) )
-                                .setUrlOutput(
+                                .setNote(
                                         resultSet.getString(
                                                 MainColumns.NOTE.toString() ) ) );
             }
