@@ -31,8 +31,8 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
-    public List<MainEntity> getAll() {
-        List<MainEntity> entities = null;
+    public List<IMainEntity> getAll() {
+        List<IMainEntity> entities = null;
         try(Connection connection = DriverManager.getConnection(url, name, pass)) {
             MainDao dao = new MainDao(connection);
             entities = dao.findAll();
@@ -44,12 +44,12 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
-    public MainEntity getById(long id) {
+    public IMainEntity getById(long id) {
         throw new NotImplementedException("MainEntity getById(long id) need impl");
     }
 
     @Override
-    public void add(MainEntity entity) {
+    public void add(IMainEntity entity) {
         Boolean queryResult = null;
         try(Connection connection = DriverManager.getConnection(url, name, pass)) {
             MainDao dao = new MainDao(connection);
@@ -61,7 +61,7 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
-    public void update(MainEntity entity) {
+    public void update(IMainEntity entity) {
         Boolean queryResult = null;
         try(Connection connection = DriverManager.getConnection(url, name, pass)) {
             MainDao dao = new MainDao(connection);

@@ -2,18 +2,15 @@ package ru.mrs.docs.service.db.entity;
 
 import org.apache.commons.lang3.NotImplementedException;
 
-import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class MainEntityMapColumnToStringFacade implements Map<MainColumns, String>, IMainEntity{
 
     private IMainEntity entity;
     private Map<MainColumns, String> mainColumnToValue;
-    public static final String DATE_FORMAT = "dd.MM.yyyy";
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     public MainEntityMapColumnToStringFacade(IMainEntity entity) {
         this.entity = entity;
@@ -65,49 +62,82 @@ public class MainEntityMapColumnToStringFacade implements Map<MainColumns, Strin
     }
 
     public MainEntityMapColumnToStringFacade(Map<MainColumns, String> mainColumnToValue) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
         this.mainColumnToValue = mainColumnToValue;
         entity = new MainEntityImpl();
-        entity.setId(
-                        Long.valueOf(
-                                mainColumnToValue.get(
-                                        MainColumns.ID ) ) );
-
+        try {
+            entity.setId(
+                    mainColumnToValue.get(MainColumns.ID)==null ? null :
+                            Long.valueOf(
+                                    mainColumnToValue.get(
+                                            MainColumns.ID ) ) );
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
         entity.setUrlInput(
-                        mainColumnToValue.get(
-                                MainColumns.URL_INPUT) );
+                mainColumnToValue.get(
+                        MainColumns.URL_INPUT) );
         entity.setGenOrgNumb(
-                        mainColumnToValue.get(
-                                MainColumns.GEN_ORG_NUMB) );
-        entity.setGenOrgDate(
-                        mainColumnToValue.get(
-                                MainColumns.GEN_ORG_DATE ) );
+                mainColumnToValue.get(
+                        MainColumns.GEN_ORG_NUMB) );
+        try {
+            entity.setGenOrgDate(
+                    mainColumnToValue.get(MainColumns.GEN_ORG_DATE)==null ? null :
+                            simpleDateFormat.parse(
+                                    mainColumnToValue.get(
+                                            MainColumns.GEN_ORG_DATE ) ) );
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         entity.setOutputNumb(
-                        mainColumnToValue.get(
-                                MainColumns.OUTPUT_NUMB ) );
-        entity.setOutputDate(
-                        mainColumnToValue.get(
-                                MainColumns.OUTPUT_DATE ) );
-        entity.setFromOwner(
-                        mainColumnToValue.get(
-                                MainColumns.FROM_OWNER ) );
-        entity.setInputDate(
-                        mainColumnToValue.get(
-                                MainColumns.INPUT_DATE ) );
+                mainColumnToValue.get(
+                        MainColumns.OUTPUT_NUMB ) );
+        try {
+            entity.setOutputDate(
+                    mainColumnToValue.get(MainColumns.OUTPUT_DATE)==null? null :
+                            simpleDateFormat.parse(
+                                    mainColumnToValue.get(
+                                            MainColumns.OUTPUT_DATE ) ) );
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+            entity.setFromOwner(
+                    mainColumnToValue.get(
+                            MainColumns.FROM_OWNER ) );
+        try{
+            entity.setInputDate(
+                    mainColumnToValue.get(MainColumns.INPUT_DATE)==null ? null :
+                            simpleDateFormat.parse(
+                                    mainColumnToValue.get(
+                                            MainColumns.INPUT_DATE ) ) );
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         entity.setInputNumb(
                         mainColumnToValue.get(
                                 MainColumns.INPUT_NUMB ) );
         entity.setWorker(
                         mainColumnToValue.get(
                                 MainColumns.WORKER ) );
-        entity.setHandPass(
-                        mainColumnToValue.get(
-                                MainColumns.HAND_PASS ) );
-        entity.setAnswerComp(
-                        mainColumnToValue.get(
-                                MainColumns.ANSWER_COMP ) );
-        entity.setAnswerDate(
-                        mainColumnToValue.get(
-                                MainColumns.ANSWER_DATE ) );
+        try{
+            entity.setHandPass(
+                    mainColumnToValue.get(MainColumns.HAND_PASS)==null ? null :
+                            simpleDateFormat.parse(
+                                    mainColumnToValue.get(
+                                            MainColumns.HAND_PASS ) ) );
+            entity.setAnswerComp(
+                    mainColumnToValue.get(MainColumns.ANSWER_COMP)==null ? null :
+                            simpleDateFormat.parse(
+                                    mainColumnToValue.get(
+                                            MainColumns.ANSWER_COMP ) ) );
+            entity.setAnswerDate(
+                    mainColumnToValue.get(MainColumns.ANSWER_DATE)==null ? null :
+                            simpleDateFormat.parse(
+                                    mainColumnToValue.get(
+                                            MainColumns.ANSWER_DATE ) ) );
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         entity.setAnswerNumb(
                         mainColumnToValue.get(
                                 MainColumns.ANSWER_NUMB ) );
@@ -125,162 +155,162 @@ public class MainEntityMapColumnToStringFacade implements Map<MainColumns, Strin
 
     @Override
     public Long getId() {
-        throw new NotImplementedException();
+        return this.entity.getId();
     }
 
     @Override
     public String getUrlInput() {
-        throw new NotImplementedException();
+        return this.entity.getUrlInput();
     }
 
     @Override
     public String getGenOrgNumb() {
-        throw new NotImplementedException();
+        return this.entity.getGenOrgNumb();
     }
 
     @Override
     public Date getGenOrgDate() {
-        throw new NotImplementedException();
+        return this.entity.getGenOrgDate();
     }
 
     @Override
     public String getOutputNumb() {
-        throw new NotImplementedException();
+        return this.entity.getOutputNumb();
     }
 
     @Override
     public Date getOutputDate() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public String getFromOwner() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Date getInputDate() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public String getInputNumb() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public String getWorker() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Date getHandPass() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Date getAnswerComp() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Date getAnswerDate() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public String getAnswerNumb() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public String getUrlOutput() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public String getNote() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setId(Long id) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setUrlInput(String urlInput) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setGenOrgNumb(String genOrgNumb) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setGenOrgDate(Date genOrgDate) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setOutputNumb(String outputNumb) {
-        throw new NotImplementedException();
+        return this.entity.getOutputDate();
     }
 
     @Override
     public void setOutputDate(Date outputDate) {
-        throw new NotImplementedException();
+        this.entity.setOutputDate(outputDate);
+    }
+
+    @Override
+    public String getFromOwner() {
+        return this.entity.getFromOwner();
+    }
+
+    @Override
+    public Date getInputDate() {
+        return this.entity.getInputDate();
+    }
+
+    @Override
+    public String getInputNumb() {
+        return this.entity.getInputNumb();
+    }
+
+    @Override
+    public String getWorker() {
+        return this.entity.getWorker();
+    }
+
+    @Override
+    public Date getHandPass() {
+        return this.entity.getHandPass();
+    }
+
+    @Override
+    public Date getAnswerComp() {
+        return this.entity.getAnswerComp();
+    }
+
+    @Override
+    public Date getAnswerDate() {
+        return this.entity.getAnswerDate();
+    }
+
+    @Override
+    public String getAnswerNumb() {
+        return this.entity.getAnswerNumb();
+    }
+
+    @Override
+    public String getUrlOutput() {
+        return this.entity.getUrlOutput();
+    }
+
+    @Override
+    public String getNote() {
+        return this.entity.getNote();
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.entity.setId(id);
+    }
+
+    @Override
+    public void setUrlInput(String urlInput) {
+        this.entity.setUrlInput(urlInput);
+    }
+
+    @Override
+    public void setGenOrgNumb(String genOrgNumb) {
+        this.entity.setGenOrgNumb(genOrgNumb);
+    }
+
+    @Override
+    public void setGenOrgDate(Date genOrgDate) {
+        this.entity.setGenOrgDate(genOrgDate);
+    }
+
+    @Override
+    public void setOutputNumb(String outputNumb) {
+        this.entity.setOutputNumb(outputNumb);
     }
 
     @Override
     public void setFromOwner(String fromOwner) {
-        throw new NotImplementedException();
+        this.entity.setFromOwner(fromOwner);
     }
 
     @Override
     public void setInputDate(Date inputDate) {
-        throw new NotImplementedException();
+        this.entity.setInputDate(inputDate);
     }
 
     @Override
     public void setInputNumb(String inputNumb) {
-        throw new NotImplementedException();
+        this.entity.setInputNumb(inputNumb);
     }
 
     @Override
     public void setWorker(String worker) {
-        throw new NotImplementedException();
+        this.entity.setWorker(worker);
     }
 
     @Override
     public void setHandPass(Date handPass) {
-        throw new NotImplementedException();
+        this.entity.setHandPass(handPass);
     }
 
     @Override
     public void setAnswerComp(Date AnswerComp) {
-        throw new NotImplementedException();
+        this.entity.setAnswerComp(getAnswerComp());
     }
 
     @Override
     public void setAnswerDate(Date answerDate) {
-        throw new NotImplementedException();
+        this.entity.setAnswerDate(answerDate);
     }
 
     @Override
     public void setAnswerNumb(String answerNumb) {
-        throw new NotImplementedException();
+        this.entity.setAnswerNumb(answerNumb);
     }
 
     @Override
     public void setUrlOutput(String urlOutput) {
-        throw new NotImplementedException();
+        this.entity.setUrlOutput(urlOutput);
     }
 
     @Override
     public void setNote(String note) {
-        throw new NotImplementedException();
+        this.entity.setNote(note);
     }
 
     @Override

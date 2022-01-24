@@ -78,7 +78,7 @@
               </tr>
               <tr>
                 <td><label for="${col_texts[3]}">${col_beautify[3]}</label></td>
-                <td><input type="date" required class="values" id="${col_texts[3]}" name="${col_names[3]}"></td>
+                <td><input type="date" class="values" id="${col_texts[3]}" name="${col_names[3]}"></td>
               </tr>
               <tr>
                 <td><label for="${col_texts[4]}">${col_beautify[4]}</label></td>
@@ -86,7 +86,7 @@
               </tr>
               <tr>
                 <td><label for="${col_texts[5]}">${col_beautify[5]}</label></td>
-                <td><input type="date" required class="values" id="${col_texts[5]}" name="${col_names[5]}"></td>
+                <td><input type="date" class="values" id="${col_texts[5]}" name="${col_names[5]}"></td>
               </tr>
               <tr>
                 <td><label for="${col_texts[6]}">${col_beautify[6]}</label></td>
@@ -94,7 +94,7 @@
               </tr>
               <tr>
                 <td><label for="${col_texts[7]}">${col_beautify[7]}</label></td>
-                <td><input type="date" required class="values" id="${col_texts[7]}" name="${col_names[7]}"></td>
+                <td><input type="date" class="values" id="${col_texts[7]}" name="${col_names[7]}"></td>
               </tr>
               <tr>
                 <td><label for="${col_texts[8]}">${col_beautify[8]}</label></td>
@@ -106,15 +106,15 @@
               </tr>
               <tr>
                 <td><label for="${col_texts[10]}">${col_beautify[10]}</label></td>
-                <td><input type="date" required class="values" id="${col_texts[10]}" name="${col_names[10]}"></td>
+                <td><input type="date" class="values" id="${col_texts[10]}" name="${col_names[10]}"></td>
               </tr>
               <tr>
                 <td><label for="${col_texts[11]}">${col_beautify[11]}</label></td>
-                <td><input type="date" required class="values" id="${col_texts[11]}" name="${col_names[11]}"></td>
+                <td><input type="date" class="values" id="${col_texts[11]}" name="${col_names[11]}"></td>
               </tr>
               <tr>
                 <td><label for="${col_texts[12]}">${col_beautify[12]}</label></td>
-                <td><input type="date" required class="values" id="${col_texts[12]}" name="${col_names[12]}"></td>
+                <td><input type="date" class="values" id="${col_texts[12]}" name="${col_names[12]}"></td>
               </tr>
               <tr>
                 <td><label for="${col_texts[13]}">${col_beautify[13]}</label></td>

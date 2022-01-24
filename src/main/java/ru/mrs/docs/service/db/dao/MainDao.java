@@ -6,13 +6,11 @@ import org.apache.logging.log4j.Logger;
 import ru.mrs.base.service.db.Executor;
 import ru.mrs.docs.service.db.entity.MainColumns;
 import ru.mrs.docs.service.db.entity.IMainEntity;
+import ru.mrs.docs.service.db.entity.MainEntityImpl;
 import ru.mrs.docs.service.db.entity.MainEntityMapColumnToStringFacade;
 
 import java.sql.Connection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class MainDao implements DaoOperations<IMainEntity, Long> {
 
@@ -26,68 +24,70 @@ public class MainDao implements DaoOperations<IMainEntity, Long> {
     @Override
     public List<IMainEntity> findAll() {
         return executor.execFetch("SELECT * FROM main;", resultSet -> {
-            List<MainEntity> entities = new LinkedList<>();
+            List<IMainEntity> entities = new LinkedList<>();
             while (resultSet.next()) {
-                entities.add(
-                        new MainEntity()
-                                .setId(
-                                        resultSet.getLong(
-                                                MainColumns.ID.toString() ) )
-                                .setUrlInput(
-                                        resultSet.getString(
-                                                MainColumns.URL_INPUT.toString() ) )
-                                .setGenOrgNumb(
-                                        resultSet.getString(
-                                                MainColumns.GEN_ORG_NUMB.toString() ) )
-                                .setGenOrgDate(
-                                        resultSet.getDate(
-                                                MainColumns.GEN_ORG_DATE.toString() ) )
-                                .setOutputNumb(
-                                        resultSet.getString(
-                                                MainColumns.OUTPUT_NUMB.toString() ) )
-                                .setOutputDate(
-                                        resultSet.getDate(
-                                                MainColumns.OUTPUT_DATE.toString() ) )
-                                .setFromOwner(
-                                        resultSet.getString(
-                                                MainColumns.FROM_OWNER.toString() ) )
-                                .setInputDate(
-                                        resultSet.getDate(
-                                                MainColumns.INPUT_DATE.toString() ) )
-                                .setInputNumb(
-                                        resultSet.getString(
-                                                MainColumns.INPUT_NUMB.toString() ) )
-                                .setWorker(
-                                        resultSet.getString(
-                                                MainColumns.WORKER.toString() ) )
-                                .setAnswerComp(
-                                        resultSet.getDate(
-                                                MainColumns.ANSWER_COMP.toString() ) )
-                                .setAnswerDate(
-                                        resultSet.getDate(
-                                                MainColumns.ANSWER_DATE.toString() ) )
-                                .setAnswerNumb(
-                                        resultSet.getString(
-                                                MainColumns.ANSWER_NUMB.toString() ) )
-                                .setUrlOutput(
-                                        resultSet.getString(
-                                                MainColumns.URL_OUTPUT.toString() ) )
-                                .setNote(
-                                        resultSet.getString(
-                                                MainColumns.NOTE.toString() ) ) );
+                MainEntityImpl mainEntity = new MainEntityImpl();
+                mainEntity.setId(resultSet.getLong(
+                        MainColumns.ID.toString() ) );
+                mainEntity.setUrlInput(
+                        resultSet.getString(
+                                MainColumns.URL_INPUT.toString() ) );
+                mainEntity.setGenOrgNumb(
+                        resultSet.getString(
+                                MainColumns.GEN_ORG_NUMB.toString() ) );
+                mainEntity.setGenOrgDate(
+                        resultSet.getDate(
+                                MainColumns.GEN_ORG_DATE.toString() ) );
+                mainEntity.setOutputNumb(
+                        resultSet.getString(
+                                MainColumns.OUTPUT_NUMB.toString() ) );
+                mainEntity.setOutputDate(
+                        resultSet.getDate(
+                                MainColumns.OUTPUT_DATE.toString() ) );
+                mainEntity.setFromOwner(
+                        resultSet.getString(
+                                MainColumns.FROM_OWNER.toString() ) );
+                mainEntity.setInputDate(
+                        resultSet.getDate(
+                                MainColumns.INPUT_DATE.toString() ) );
+                mainEntity.setInputNumb(
+                        resultSet.getString(
+                                MainColumns.INPUT_NUMB.toString() ) );
+                mainEntity.setWorker(
+                        resultSet.getString(
+                                MainColumns.WORKER.toString() ) );
+                mainEntity.setHandPass(
+                        resultSet.getDate(
+                                MainColumns.HAND_PASS.toString() ) );
+                mainEntity.setAnswerComp(
+                        resultSet.getDate(
+                                MainColumns.ANSWER_COMP.toString() ) );
+                mainEntity.setAnswerDate(
+                        resultSet.getDate(
+                                MainColumns.ANSWER_DATE.toString() ) );
+                mainEntity.setAnswerNumb(
+                        resultSet.getString(
+                                MainColumns.ANSWER_COMP.toString() ) );
+                mainEntity.setUrlOutput(
+                        resultSet.getString(
+                                MainColumns.URL_OUTPUT.toString() ) );
+                mainEntity.setNote(
+                        resultSet.getString(
+                                MainColumns.NOTE.toString() ) );
+                entities.add(mainEntity);
             }
             return entities;
         });
     }
 
     @Override
-    public Optional<MainEntity> findById(Long id) {
+    public Optional<IMainEntity> findById(Long id) {
         throw new NotImplementedException("Optional<MainEntity> findById(Long id) need impl");
 //        return null;
     }
 
     @Override
-    public boolean saveNew(MainEntity entity) {
+    public boolean saveNew(IMainEntity entity) {
         Map<MainColumns, String> mapEntity = new MainEntityMapColumnToStringFacade(entity);
         String queryTemplate = "INSERT INTO main(" +
                 "%s, " +
@@ -163,7 +163,7 @@ public class MainDao implements DaoOperations<IMainEntity, Long> {
     }
 
     @Override
-    public boolean merge(MainEntity entity) {
+    public boolean merge(IMainEntity entity) {
         Map<MainColumns, String> mapEntity = new MainEntityMapColumnToStringFacade(entity);
         String queryTemplate = "UPDATE main set \t" +
                 "%s=%s, \n\t" +

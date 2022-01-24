@@ -8,9 +8,9 @@ import ru.mrs.base.service.account.AccountService;
 import ru.mrs.docs.Embedded;
 import ru.mrs.docs.service.account.UserProfile;
 import ru.mrs.docs.service.db.MainService;
+import ru.mrs.docs.service.db.entity.IMainEntity;
 import ru.mrs.docs.service.db.entity.MainColumns;
-import ru.mrs.docs.service.db.entity.MainEntity;
-import ru.mrs.docs.service.db.entity.MainHelper;
+import ru.mrs.docs.service.db.entity.MainEntityMapColumnToStringFacade;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,7 +38,7 @@ public class MainServlet extends HttpServlet implements Servletable {
         UserProfile userProfile = (UserProfile) accountService.getUserBySessionId(request.getSession().getId());
         if (userProfile != null) {
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC + " method Get");
-            List<MainEntity> entities = mainService.getAll();
+            List<IMainEntity> entities = mainService.getAll();
             entities.sort((a, b) -> (int) (b.getId() - a.getId()));
             Map<String, Object> data = new HashMap<>();
             data.put("main_values", entities);
@@ -69,7 +69,7 @@ public class MainServlet extends HttpServlet implements Servletable {
         UserProfile userProfile = (UserProfile) accountService.getUserBySessionId(request.getSession().getId());
         if (userProfile != null) {
             LOGGER.info(AUTHORISED_BEFORE + PATH_SPEC + " method Post");
-            MainEntity entity = MainHelper.toEntity(mapByColumns(request));
+            IMainEntity entity = new MainEntityMapColumnToStringFacade(mapByColumns(request));
             /*Map<MainColumns, String> mainColumnToValues = Helper.fetchByEnum(request);
             PostVars postVar = mainColumnToValues.get(MainColumns.ID)==null ? PostVars.CREATE : PostVars.UPDATE;*/
             StoreMethod storeMethod = entity.getId() == null ? StoreMethod.CREATE : StoreMethod.UPDATE;

@@ -25,10 +25,10 @@ test {
 }*/
 
 repositories {
-//    mavenCentral()
-    flatDir {
-        dirs 'lib'
-    }
+    mavenCentral()
+//    flatDir {
+//        dirs 'lib'
+//    }
 }
 
 ext {
@@ -92,9 +92,9 @@ dependencies {
     testImplementation 'org.jacoco:org.jacoco.agent:0.8.7'
     testImplementation 'org.jacoco:org.jacoco.core:0.8.7'
     testImplementation 'org.jacoco:org.jacoco.report:0.8.7'*/
-    implementation "org.eclipse.jetty:jetty-security:$jetty9_version"
-    implementation "org.eclipse.jetty:jetty-http:$jetty9_version"
-    implementation "org.eclipse.jetty:jetty-io:$jetty9_version"
+//    implementation "org.eclipse.jetty:jetty-security:$jetty9_version"
+//    implementation "org.eclipse.jetty:jetty-http:$jetty9_version"
+//    implementation "org.eclipse.jetty:jetty-io:$jetty9_version"
 }
 
 sourceSets {
