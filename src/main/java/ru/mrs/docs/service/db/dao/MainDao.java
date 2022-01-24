@@ -5,8 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.mrs.base.service.db.Executor;
 import ru.mrs.docs.service.db.entity.MainColumns;
-import ru.mrs.docs.service.db.entity.MainEntity;
-import ru.mrs.docs.service.db.entity.MainEntityMapColumnValueStringFacade;
+import ru.mrs.docs.service.db.entity.IMainEntity;
+import ru.mrs.docs.service.db.entity.MainEntityMapColumnToStringFacade;
 
 import java.sql.Connection;
 import java.util.LinkedList;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class MainDao implements DaoOperations<MainEntity, Long> {
+public class MainDao implements DaoOperations<IMainEntity, Long> {
 
     private static final Logger LOGGER = LogManager.getLogger(MainDao.class);
     private Executor executor;
@@ -24,7 +24,7 @@ public class MainDao implements DaoOperations<MainEntity, Long> {
     }
 
     @Override
-    public List<MainEntity> findAll() {
+    public List<IMainEntity> findAll() {
         return executor.execFetch("SELECT * FROM main;", resultSet -> {
             List<MainEntity> entities = new LinkedList<>();
             while (resultSet.next()) {
@@ -36,12 +36,39 @@ public class MainDao implements DaoOperations<MainEntity, Long> {
                                 .setUrlInput(
                                         resultSet.getString(
                                                 MainColumns.URL_INPUT.toString() ) )
+                                .setGenOrgNumb(
+                                        resultSet.getString(
+                                                MainColumns.GEN_ORG_NUMB.toString() ) )
+                                .setGenOrgDate(
+                                        resultSet.getDate(
+                                                MainColumns.GEN_ORG_DATE.toString() ) )
+                                .setOutputNumb(
+                                        resultSet.getString(
+                                                MainColumns.OUTPUT_NUMB.toString() ) )
+                                .setOutputDate(
+                                        resultSet.getDate(
+                                                MainColumns.OUTPUT_DATE.toString() ) )
                                 .setFromOwner(
                                         resultSet.getString(
                                                 MainColumns.FROM_OWNER.toString() ) )
+                                .setInputDate(
+                                        resultSet.getDate(
+                                                MainColumns.INPUT_DATE.toString() ) )
+                                .setInputNumb(
+                                        resultSet.getString(
+                                                MainColumns.INPUT_NUMB.toString() ) )
                                 .setWorker(
                                         resultSet.getString(
                                                 MainColumns.WORKER.toString() ) )
+                                .setAnswerComp(
+                                        resultSet.getDate(
+                                                MainColumns.ANSWER_COMP.toString() ) )
+                                .setAnswerDate(
+                                        resultSet.getDate(
+                                                MainColumns.ANSWER_DATE.toString() ) )
+                                .setAnswerNumb(
+                                        resultSet.getString(
+                                                MainColumns.ANSWER_NUMB.toString() ) )
                                 .setUrlOutput(
                                         resultSet.getString(
                                                 MainColumns.URL_OUTPUT.toString() ) )
@@ -61,36 +88,36 @@ public class MainDao implements DaoOperations<MainEntity, Long> {
 
     @Override
     public boolean saveNew(MainEntity entity) {
-        Map<MainColumns, String> mapEntity = new MainEntityMapColumnValueStringFacade(entity);
+        Map<MainColumns, String> mapEntity = new MainEntityMapColumnToStringFacade(entity);
         String queryTemplate = "INSERT INTO main(" +
                 "%s, " +
                 "%s, " +
-//                "%s, " +
-                "%s, " +
-//                "%s, " +
-                "%s, " +
-//                "%s, " +
                 "%s, " +
                 "%s, " +
-//                "%s, " +
-//                "%s, " +
-//                "%s, " +
+                "%s, " +
+                "%s, " +
+                "%s, " +
+                "%s, " +
+                "%s, " +
+                "%s, " +
+                "%s, " +
+                "%s, " +
                 "%s, " +
                 "%s, " +
                 "%s" +
                 ") \n\tVALUES (" +
                 "%s, " +
                 "%s, " +
-//                "%s, " +
-                "%s, " +
-//                "%s, " +
-                "%s, " +
-//                "%s, " +
                 "%s, " +
                 "%s, " +
-//                "%s, " +
-//                "%s, " +
-//                "%s, " +
+                "%s, " +
+                "%s, " +
+                "%s, " +
+                "%s, " +
+                "%s, " +
+                "%s, " +
+                "%s, " +
+                "%s, " +
                 "%s, " +
                 "%s, " +
                 "%s);" ;
@@ -98,32 +125,32 @@ public class MainDao implements DaoOperations<MainEntity, Long> {
                 queryTemplate,
                 MainColumns.URL_INPUT,
                 MainColumns.GEN_ORG_NUMB,
-//                MainColumns.GEN_ORG_DATE,
+                MainColumns.GEN_ORG_DATE,
                 MainColumns.OUTPUT_NUMB,
-//                MainColumns.OUTPUT_DATE,
+                MainColumns.OUTPUT_DATE,
                 MainColumns.FROM_OWNER,
-//                MainColumns.INPUT_DATE,
+                MainColumns.INPUT_DATE,
                 MainColumns.INPUT_NUMB,
                 MainColumns.WORKER,
-//                MainColumns.HAND_PASS,
-//                MainColumns.ANSWER_COMP,
-//                MainColumns.ANSWER_DATE,
+                MainColumns.HAND_PASS,
+                MainColumns.ANSWER_COMP,
+                MainColumns.ANSWER_DATE,
                 MainColumns.ANSWER_NUMB,
                 MainColumns.URL_OUTPUT,
                 MainColumns.NOTE
                 ,
                 mapEntity.get(MainColumns.URL_INPUT),
                 mapEntity.get(MainColumns.GEN_ORG_NUMB),
-//                mapEntity.get(MainColumns.GEN_ORG_DATE),
+                mapEntity.get(MainColumns.GEN_ORG_DATE),
                 mapEntity.get(MainColumns.OUTPUT_NUMB),
-//                mapEntity.get(MainColumns.OUTPUT_DATE),
+                mapEntity.get(MainColumns.OUTPUT_DATE),
                 mapEntity.get(MainColumns.FROM_OWNER),
-//                mapEntity.get(MainColumns.INPUT_DATE),
+                mapEntity.get(MainColumns.INPUT_DATE),
                 mapEntity.get(MainColumns.INPUT_NUMB),
                 mapEntity.get(MainColumns.WORKER),
-//                mapEntity.get(MainColumns.HAND_PASS),
-//                mapEntity.get(MainColumns.ANSWER_COMP),
-//                mapEntity.get(MainColumns.ANSWER_DATE),
+                mapEntity.get(MainColumns.HAND_PASS),
+                mapEntity.get(MainColumns.ANSWER_COMP),
+                mapEntity.get(MainColumns.ANSWER_DATE),
                 mapEntity.get(MainColumns.ANSWER_NUMB),
                 mapEntity.get(MainColumns.URL_OUTPUT),
                 mapEntity.get(MainColumns.NOTE)
@@ -137,7 +164,7 @@ public class MainDao implements DaoOperations<MainEntity, Long> {
 
     @Override
     public boolean merge(MainEntity entity) {
-        Map<MainColumns, String> mapEntity = new MainEntityMapColumnValueStringFacade(entity);
+        Map<MainColumns, String> mapEntity = new MainEntityMapColumnToStringFacade(entity);
         String queryTemplate = "UPDATE main set \t" +
                 "%s=%s, \n\t" +
                 "%s=%s, \n\t\t" +

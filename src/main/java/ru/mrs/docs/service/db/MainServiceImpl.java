@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import ru.mrs.base.service.file.Vfs;
 import ru.mrs.docs.Embedded;
 import ru.mrs.docs.service.db.dao.MainDao;
-import ru.mrs.docs.service.db.entity.MainEntity;
+import ru.mrs.docs.service.db.entity.IMainEntity;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
