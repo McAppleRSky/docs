@@ -164,6 +164,11 @@ jar {
             exclude '**/*.zip'
             into "bin/content"
         }
+        copy {
+            from 'append'
+            include "**/*.*"
+            into "bin"
+        }
     }
 }
 
