@@ -53,13 +53,6 @@ public class Embedded extends EmbeddedConfiguration {
                 AccountService.class, new AccountServiceImpl(
                         context.get(PropertyKeys.DEFAULT_USER),
                         context.get(PropertyKeys.DEFAULT_PROF) ) );
-        /*context.put(
-                DBService.class, configureDBService(
-                        context.get(PropertyKeys.DB_USR_NAME),
-                        context.get(PropertyKeys.DB_USR_PASSWORD),
-                        context.get(PropertyKeys.DB_DATA_PATH)
-                        ) );*/
-//        new MainServiceImpl(name.toString(), pass.toString(), path.toString());
         context.put(
                 MainService.class, new MainServiceImpl(
                         context.get(PropertyKeys.DB_USR_NAME),
@@ -94,6 +87,9 @@ public class Embedded extends EmbeddedConfiguration {
 //        errorHandler.addErrorPage(404, "missing.html");
 //        servletContextHandler.setErrorHandler(errorHandler);
 
+        /*ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
+        errorHandler.addErrorPage(404, "/index.html");
+        servletContextHandler.setErrorHandler(errorHandler);*/
         Handler[] handlers = {
                 resource_handler
                 ,servletContextHandler
@@ -102,9 +98,6 @@ public class Embedded extends EmbeddedConfiguration {
 
         HandlerList handlerList = new HandlerList();
         handlerList.setHandlers(handlers);
-        /*ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
-        errorHandler.addErrorPage(404, "/index.html");
-        servletContextHandler.setErrorHandler(errorHandler);*/
 
         Server server = new Server( Integer.parseInt( Embedded.context.get( PropertyKeys.SERVER_PORT ).toString() ) );
 //        server.setHandler(servletContextHandler);
@@ -209,20 +202,6 @@ class EmbeddedConfiguration {
         freemarker.template.Configuration freemarkerTemplateConfiguration
                  = new freemarker.template.Configuration(
                          freemarker.template.Configuration.VERSION_2_3_27 );
-        /*try {
-            configuration
-
-                    .setDirectoryForTemplateLoading(
-                            new File(
-                                    EmbeddedConfiguration.class
-                                            .getClassLoader()
-                                            .getResource("templates")
-                                            .getPath() ) );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
-//        freemarker.template.Configuration freemarkerTemplateConfiguration = configureFreemarker();
         FileTemplateLoader fileTemplateLoader = null;
         try {
             fileTemplateLoader = new FileTemplateLoader(
@@ -236,17 +215,6 @@ class EmbeddedConfiguration {
         return freemarkerTemplateConfiguration;
     }
 
-    /*protected static AccountService<UserProfile> configureAccountService(Object defaultLogin, Object defaultProfile) {
-        UserProfile userProfile = (UserProfile)ObjectWriter.readResource(defaultProfile.toString());
-        return new AccountServiceImpl(defaultLogin.toString(), userProfile);
-    }*/
-
-    /*protected static DBService configureDBService(Object name, Object pass, Object path) {
-        return new DBServiceImpl(name.toString(), pass.toString(), path.toString());
-    }*/
-    /*protected static MainService configureMainService(Object name, Object pass, Object path) {
-        return new MainServiceImpl(name.toString(), pass.toString(), path.toString());
-    }*/
     protected static Collection<String> beautifyMainColumns() {
         Map<MainColumns, String> result = new LinkedHashMap<>();
         result.put(MainColumns.ID, "Iden.");

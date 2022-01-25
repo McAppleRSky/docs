@@ -1,6 +1,7 @@
 package ru.mrs.docs.service.db.entity;
 
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,7 +14,7 @@ public class MainEntityMapColumnToStringFacade implements Map<MainColumns, Strin
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     public MainEntityMapColumnToStringFacade(IMainEntity entity) {
-        this.entity = entity;
+//        this.entity = entity;
         mainColumnToValue = new HashMap<>();
         if ( entity.getId() != null ) {
             mainColumnToValue.put(MainColumns.ID, entity.getId().toString());
@@ -22,40 +23,52 @@ public class MainEntityMapColumnToStringFacade implements Map<MainColumns, Strin
 //        mainColumnToValues.put(MainColumns.ID, id==null ? null : id.toString());
         mainColumnToValue.put(MainColumns.URL_INPUT, entity.getUrlInput());
         mainColumnToValue.put(MainColumns.GEN_ORG_NUMB, entity.getGenOrgNumb());
-        mainColumnToValue.put(
-                MainColumns.GEN_ORG_DATE,
-                new SimpleDateFormat(DATE_FORMAT)
-                        .format(
-                                entity.getGenOrgDate() ) );
+        if (entity.getGenOrgDate() != null) {
+            mainColumnToValue.put(
+                    MainColumns.GEN_ORG_DATE,
+                    new SimpleDateFormat(DATE_FORMAT)
+                            .format(
+                                    entity.getGenOrgDate() ) );
+        }
         mainColumnToValue.put(MainColumns.OUTPUT_NUMB, entity.getOutputNumb());
-        mainColumnToValue.put(
-                MainColumns.OUTPUT_DATE,
-                new SimpleDateFormat(DATE_FORMAT)
-                        .format(
-                                entity.getOutputDate() ) );
+        if (entity.getOutputDate() != null) {
+            mainColumnToValue.put(
+                    MainColumns.OUTPUT_DATE,
+                    new SimpleDateFormat(DATE_FORMAT)
+                            .format(
+                                    entity.getOutputDate() ) );
+        }
         mainColumnToValue.put(MainColumns.FROM_OWNER, entity.getFromOwner());
-        mainColumnToValue.put(
-                MainColumns.INPUT_DATE,
-                new SimpleDateFormat(DATE_FORMAT)
-                        .format(
-                                entity.getInputDate() ) );
+        if (entity.getInputDate() != null) {
+            mainColumnToValue.put(
+                    MainColumns.INPUT_DATE,
+                    new SimpleDateFormat(DATE_FORMAT)
+                            .format(
+                                    entity.getInputDate() ) );
+        }
         mainColumnToValue.put(MainColumns.INPUT_NUMB, entity.getInputNumb());
         mainColumnToValue.put(MainColumns.WORKER, entity.getWorker());
-        mainColumnToValue.put(
-                MainColumns.HAND_PASS,
-                new SimpleDateFormat(DATE_FORMAT)
-                        .format(
-                                entity.getHandPass() ) );
-        mainColumnToValue.put(
-                MainColumns.ANSWER_COMP,
-                new SimpleDateFormat(DATE_FORMAT)
-                        .format(
-                                entity.getAnswerComp() ) );
-        mainColumnToValue.put(
-                MainColumns.ANSWER_DATE,
-                new SimpleDateFormat(DATE_FORMAT)
-                        .format(
-                                entity.getAnswerDate() ) );
+        if (entity.getHandPass() != null) {
+            mainColumnToValue.put(
+                    MainColumns.HAND_PASS,
+                    new SimpleDateFormat(DATE_FORMAT)
+                            .format(
+                                    entity.getHandPass() ) );
+        }
+        if (entity.getAnswerComp() != null) {
+            mainColumnToValue.put(
+                    MainColumns.ANSWER_COMP,
+                    new SimpleDateFormat(DATE_FORMAT)
+                            .format(
+                                    entity.getAnswerComp() ) );
+        }
+        if (entity.getAnswerDate() != null) {
+            mainColumnToValue.put(
+                    MainColumns.ANSWER_DATE,
+                    new SimpleDateFormat(DATE_FORMAT)
+                            .format(
+                                    entity.getAnswerDate() ) );
+        }
         mainColumnToValue.put(MainColumns.ANSWER_NUMB, entity.getAnswerNumb());
         mainColumnToValue.put(MainColumns.URL_OUTPUT, entity.getUrlOutput());
         mainColumnToValue.put(MainColumns.NOTE, entity.getNote());
@@ -63,16 +76,17 @@ public class MainEntityMapColumnToStringFacade implements Map<MainColumns, Strin
 
     public MainEntityMapColumnToStringFacade(Map<MainColumns, String> mainColumnToValue) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
-        this.mainColumnToValue = mainColumnToValue;
+//        this.mainColumnToValue = mainColumnToValue;
         entity = new MainEntityImpl();
-        try {
-            entity.setId(
-                    mainColumnToValue.get(MainColumns.ID)==null ? null :
-                            Long.valueOf(
-                                    mainColumnToValue.get(
-                                            MainColumns.ID ) ) );
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        if (mainColumnToValue.get(MainColumns.ID) != null) {
+            try {
+                entity.setId(
+                        Long.valueOf(
+                                mainColumnToValue.get(
+                                        MainColumns.ID ) ) );
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
         entity.setUrlInput(
                 mainColumnToValue.get(
@@ -80,38 +94,41 @@ public class MainEntityMapColumnToStringFacade implements Map<MainColumns, Strin
         entity.setGenOrgNumb(
                 mainColumnToValue.get(
                         MainColumns.GEN_ORG_NUMB) );
-        try {
-            entity.setGenOrgDate(
-                    mainColumnToValue.get(MainColumns.GEN_ORG_DATE)==null ? null :
-                            simpleDateFormat.parse(
-                                    mainColumnToValue.get(
-                                            MainColumns.GEN_ORG_DATE ) ) );
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (!mainColumnToValue.get(MainColumns.GEN_ORG_DATE).isEmpty()) {
+            try {
+                entity.setGenOrgDate(
+                        simpleDateFormat.parse(
+                                mainColumnToValue.get(
+                                        MainColumns.GEN_ORG_DATE ) ) );
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         entity.setOutputNumb(
                 mainColumnToValue.get(
                         MainColumns.OUTPUT_NUMB ) );
-        try {
-            entity.setOutputDate(
-                    mainColumnToValue.get(MainColumns.OUTPUT_DATE)==null? null :
-                            simpleDateFormat.parse(
-                                    mainColumnToValue.get(
-                                            MainColumns.OUTPUT_DATE ) ) );
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (!mainColumnToValue.get(MainColumns.OUTPUT_DATE).isEmpty()) {
+            try {
+                entity.setOutputDate(
+                        simpleDateFormat.parse(
+                                mainColumnToValue.get(
+                                        MainColumns.OUTPUT_DATE ) ) );
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-            entity.setFromOwner(
-                    mainColumnToValue.get(
-                            MainColumns.FROM_OWNER ) );
-        try{
-            entity.setInputDate(
-                    mainColumnToValue.get(MainColumns.INPUT_DATE)==null ? null :
-                            simpleDateFormat.parse(
-                                    mainColumnToValue.get(
-                                            MainColumns.INPUT_DATE ) ) );
-        } catch (ParseException e) {
-            e.printStackTrace();
+        entity.setFromOwner(
+                mainColumnToValue.get(
+                        MainColumns.FROM_OWNER ) );
+        if (!mainColumnToValue.get(MainColumns.INPUT_DATE).isEmpty()) {
+            try{
+                entity.setInputDate(
+                        simpleDateFormat.parse(
+                                mainColumnToValue.get(
+                                        MainColumns.INPUT_DATE ) ) );
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         entity.setInputNumb(
                         mainColumnToValue.get(
@@ -119,24 +136,37 @@ public class MainEntityMapColumnToStringFacade implements Map<MainColumns, Strin
         entity.setWorker(
                         mainColumnToValue.get(
                                 MainColumns.WORKER ) );
-        try{
-            entity.setHandPass(
-                    mainColumnToValue.get(MainColumns.HAND_PASS)==null ? null :
-                            simpleDateFormat.parse(
-                                    mainColumnToValue.get(
-                                            MainColumns.HAND_PASS ) ) );
-            entity.setAnswerComp(
-                    mainColumnToValue.get(MainColumns.ANSWER_COMP)==null ? null :
-                            simpleDateFormat.parse(
-                                    mainColumnToValue.get(
-                                            MainColumns.ANSWER_COMP ) ) );
-            entity.setAnswerDate(
-                    mainColumnToValue.get(MainColumns.ANSWER_DATE)==null ? null :
-                            simpleDateFormat.parse(
-                                    mainColumnToValue.get(
-                                            MainColumns.ANSWER_DATE ) ) );
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (!mainColumnToValue.get(MainColumns.HAND_PASS).isEmpty()) {
+            try {
+                entity.setHandPass(
+                        simpleDateFormat.parse(
+                                mainColumnToValue.get(
+                                        MainColumns.HAND_PASS)));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!mainColumnToValue.get(MainColumns.ANSWER_COMP).isEmpty()) {
+            try{
+                entity.setAnswerComp(
+                        simpleDateFormat.parse(
+                                mainColumnToValue.get(
+                                        MainColumns.ANSWER_COMP ) ) );
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!mainColumnToValue.get(MainColumns.ANSWER_DATE).isEmpty()) {
+            try {
+                entity.setAnswerDate(
+                        simpleDateFormat.parse(
+                                mainColumnToValue.get(
+                                        MainColumns.ANSWER_DATE)));
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         entity.setAnswerNumb(
                         mainColumnToValue.get(

@@ -15,10 +15,11 @@ class EntityBehaviour {
     void dateNullTest() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
         Map<MainColumns, String> mainColumnToValue = new HashMap<>();
+        mainColumnToValue.put(MainColumns.OUTPUT_DATE, "");
         IMainEntity entity = new MainEntityImpl();
         try {
             entity.setOutputDate(
-                    mainColumnToValue.get(MainColumns.OUTPUT_DATE)==null? null :
+                    mainColumnToValue.get(MainColumns.OUTPUT_DATE).isEmpty() ? null :
                             simpleDateFormat.parse(
                                     mainColumnToValue.get(
                                             MainColumns.OUTPUT_DATE) ) );
@@ -27,4 +28,5 @@ class EntityBehaviour {
         }
         Assertions.assertNull(entity.getOutputDate());
     }
+
 }
