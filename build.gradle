@@ -6,7 +6,7 @@ plugins {
 
 description = "docs helper service"
 group 'ru.mrs'
-version '0.0.1-SNAPSHOT'
+version '0.0.1-2022-01-25'
 
 compileJava   {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -26,9 +26,9 @@ test {
 
 repositories {
     mavenCentral()
-//    flatDir {
-//        dirs 'lib'
-//    }
+    flatDir {
+        dirs 'lib'
+    }
 }
 
 ext {
