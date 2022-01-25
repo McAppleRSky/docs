@@ -28,9 +28,17 @@ public class MainServlet extends HttpServlet implements Servletable {
 
     public static final String PATH_SPEC = "/main";
 
-    private final AccountService accountService = (AccountService) Embedded.context.get(AccountService.class);
+    private final Map<Object, Object> context;
 
-    private final MainService mainService = (MainService) Embedded.context.get(MainService.class);
+    private final AccountService accountService;
+
+    private final MainService mainService;
+
+    public MainServlet(Map<Object, Object> context) {
+        this.context = context;
+        this.accountService = (AccountService) context.get(AccountService.class);
+        this.mainService = (MainService) context.get(MainService.class);
+    }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,9 +52,9 @@ public class MainServlet extends HttpServlet implements Servletable {
             data.put("main_values", entities);
             data.put("col_names", MainColumns.getNames());
             data.put("col_texts", MainColumns.getTexts());
-            data.put("col_beautify", Embedded.context.get(MainColumns.class));
+            data.put("col_beautify", context.get(MainColumns.class));
             freemarker.template.Configuration freemarkerConfiguration =
-                    (freemarker.template.Configuration) Embedded.context.get(
+                    (freemarker.template.Configuration) context.get(
                             freemarker.template.Configuration.class );
             try (PrintWriter writer = response.getWriter()) {
                 Template template = freemarkerConfiguration.getTemplate("main.ftl");

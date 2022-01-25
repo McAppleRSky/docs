@@ -26,9 +26,9 @@ test {
 
 repositories {
     mavenCentral()
-    flatDir {
-        dirs 'lib'
-    }
+//    flatDir {
+//        dirs 'lib'
+//    }
 }
 
 ext {
@@ -39,7 +39,7 @@ ext {
 //    servlet_version = '2.5'
     freemarker_version = "2.3.31"
     jackson_version = "2.13.1"
-    mockito_version = "4.2.0"//"3.12.4"
+    mockito_version = "4.3.0"//"3.12.4"
     lang3_version = "3.12.0"
     log4j_version = "2.17.1"
     h2_version = "2.1.210"
@@ -57,7 +57,7 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit58_version"
 //    testImplementation "org.junit.jupiter:junit-jupiter:$junit58_version"
     implementation "org.apache.commons:commons-lang3:$lang3_version"
-//    testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
     implementation "org.apache.logging.log4j:log4j-core:$log4j_version"
     implementation "org.apache.logging.log4j:log4j-api:$log4j_version"
     implementation "org.eclipse.jetty:jetty-server:$jetty9_version"
@@ -80,8 +80,8 @@ dependencies {
 //    implementation 'commons-logging:commons-logging:1.2'
 //    implementation "org.slf4j:slf4j-log4j12:2.0.0-alpha5"
 //    testImplementation "org.assertj:assertj-core:3.21.0"
-    implementation "org.eclipse.jetty:jetty-servlet:$jetty9_version"
-    implementation "org.eclipse.jetty:jetty-util:$jetty9_version"
+//    implementation "org.eclipse.jetty:jetty-servlet:$jetty9_version"
+//    implementation "org.eclipse.jetty:jetty-util:$jetty9_version"
 //    implementation 'org.apiguardian:apiguardian-api:1.1.2'
     /*testImplementation 'org.junit.platform:junit-platform-engine:1.8.2'
     testImplementation 'org.junit.platform:junit-platform-suite-api:1.8.2'

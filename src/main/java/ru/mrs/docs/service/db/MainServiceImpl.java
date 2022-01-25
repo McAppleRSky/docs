@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.mrs.base.service.file.Vfs;
 import ru.mrs.docs.Embedded;
+import ru.mrs.docs.PropertyKeys;
 import ru.mrs.docs.service.db.dao.MainDao;
 import ru.mrs.docs.service.db.entity.IMainEntity;
 
@@ -12,22 +13,31 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class MainServiceImpl implements MainService {
 
     private static final Logger LOGGER = LogManager.getLogger(MainDao.class);
-    private static final Vfs VFS = (Vfs) Embedded.context.get(Vfs.class);
+
+    private final Map context;
+
+    private final Vfs VFS;
 
     private final String url;
+
     private final String name;
+
     private final String pass;
 
-    public MainServiceImpl(Object name, Object pass, Object path) {
-        String absolutePath = VFS.getAbsolutePath(path.toString());
+    public MainServiceImpl(Map context) {
+        this.context = context;
+        this.name = context.get(PropertyKeys.DB_USR_NAME).toString();
+        this.pass = context.get(PropertyKeys.DB_USR_PASSWORD).toString();
+        VFS = (Vfs) context.get(Vfs.class);
+        String absolutePath = VFS.getAbsolutePath(context.get(PropertyKeys.DB_DATA_PATH).toString());
         this.url = "jdbc:h2:" + absolutePath + "/h2";
-        this.name = name.toString();
-        this.pass = pass.toString();
         LOGGER.info(url + " " + this.name + " " + this.pass + " ");
+
     }
 
     @Override

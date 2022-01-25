@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Map;
+
 @SuppressWarnings("unchecked")
 public class LoginServlet extends HttpServlet implements Servletable{
 
@@ -19,7 +21,13 @@ public class LoginServlet extends HttpServlet implements Servletable{
 
     private static final Logger LOGGER = LogManager.getLogger(LoginServlet.class);
 
-    private final AccountService accountService = (AccountService) Embedded.context.get(AccountService.class);
+    private final Map<Object, Object> context;
+    private final AccountService accountService;
+
+    public LoginServlet(Map<Object, Object> context) {
+        this.context = context;
+        accountService = (AccountService)context.get(AccountService.class);
+    }
 
     @Override
     public void doGet(HttpServletRequest request,

@@ -40,7 +40,7 @@ import java.util.*;
 public class Embedded extends EmbeddedConfiguration {
 
     private static final Logger LOGGER = configureLogger(Embedded.class);
-    public static final Map<Object, Object> context = new HashMap();
+    private static final Map<Object, Object> context = new HashMap();
 
     static {
         LOGGER.info("Context count : " + context.size());
@@ -54,10 +54,7 @@ public class Embedded extends EmbeddedConfiguration {
                         context.get(PropertyKeys.DEFAULT_USER),
                         context.get(PropertyKeys.DEFAULT_PROF) ) );
         context.put(
-                MainService.class, new MainServiceImpl(
-                        context.get(PropertyKeys.DB_USR_NAME),
-                        context.get(PropertyKeys.DB_USR_PASSWORD),
-                        context.get(PropertyKeys.DB_DATA_PATH) ) );
+                MainService.class, new MainServiceImpl(context) );
         context.put(MainColumns.class, beautifyMainColumns());
         LOGGER.info("Context count : " + context.size());
         context.entrySet().forEach(entry -> { LOGGER.info(entry.getKey() + " " + entry.getValue()); });
@@ -73,9 +70,9 @@ public class Embedded extends EmbeddedConfiguration {
 
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
 //        servletContextHandler.setContextPath("/");
-        servletContextHandler.addServlet( new ServletHolder( new MainServlet() ), MainServlet.PATH_SPEC );
-        servletContextHandler.addServlet( new ServletHolder( new LoginServlet() ), LoginServlet.PATH_SPEC );
-        servletContextHandler.addServlet( new ServletHolder( new GreetingServlet() ), GreetingServlet.PATH_SPEC );
+        servletContextHandler.addServlet( new ServletHolder( new MainServlet(context) ), MainServlet.PATH_SPEC );
+        servletContextHandler.addServlet( new ServletHolder( new LoginServlet(context) ), LoginServlet.PATH_SPEC );
+        servletContextHandler.addServlet( new ServletHolder( new GreetingServlet(context) ), GreetingServlet.PATH_SPEC );
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
